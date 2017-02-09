@@ -1,0 +1,8 @@
+﻿@using SmartLMS.Models
+
+@if (User.IsInRole(UserRoles.Administrator.ToString()))
+{
+    <li>@Html.ActionLink("Home", "Index", "Home", new { Area = "" }, new { })</li>
+    <li>@Html.ActionLink("Courses", "Course", "Home", new { Area = "" }, new { })</li>
+    <li>@Html.ActionLink("Categories", "Index", "Categories", new { Area = "" }, new { })</li>
+}

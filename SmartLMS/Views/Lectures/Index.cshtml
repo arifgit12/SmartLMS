@@ -1,0 +1,45 @@
+﻿@model IEnumerable<SmartLMS.Models.Lecture>
+
+@{
+    ViewBag.Title = "List of Lectures";
+}
+
+<div class="row">
+    <div class="top-bottom-padding">
+        <h3>@ViewBag.Title
+            @Html.ActionLink("Add New Lecture", "Create", "Lectures", null, new { @Class = "btn btn-success pull-right" })
+        </h3>
+    </div>
+</div>
+
+<div class="row">
+    <table class="table table-bordered table-hover table-responsive">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Course.CourseName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LectureName)
+            </th>
+            <th>Action</th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Course.CourseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LectureName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.LectureId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.LectureId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.LectureId })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

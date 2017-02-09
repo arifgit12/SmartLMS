@@ -1,0 +1,46 @@
+﻿@model SmartLMS.Models.Lecture
+
+@{
+    ViewBag.Title = "Lecture Details";
+}
+
+<div class="row">
+    <div class="top-bottom-padding">
+        <h2>@ViewBag.Title</h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row">   
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Course.CourseName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Course.CourseName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LectureName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LectureName)
+        </dd>
+        <dt>File Name</dt>
+        <dd>@ViewData["lecture"]</dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.LectureId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

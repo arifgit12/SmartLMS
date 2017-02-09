@@ -1,0 +1,31 @@
+﻿@model SmartLMS.Models.Category
+
+@{
+    ViewBag.Title = "Category Details";
+}
+
+<div class="row">
+    <div class="top-bottom-padding">
+        <h2>@ViewBag.Title</h2>
+        
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.CategoryName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CategoryName)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.CategoryId }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</div>

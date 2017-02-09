@@ -1,0 +1,44 @@
+﻿@model SmartLMS.Models.Course
+@using SmartLMS.Models
+@{
+    ViewBag.Title = "Course Details";
+}
+
+<div class="row">
+    <div class="top-bottom-padding">
+        <h2>@ViewBag.Title</h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Category.CategoryName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Category.CategoryName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CourseName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CourseName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @if (User.IsInRole(UserRoles.Lecturer.ToString()))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.CourseId }, new { @class="btn btn-success" }) @:&nbsp;
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-success" })
+    }
+    else
+    {
+        @Html.ActionLink("Back to List", "Course", "Home", null, new { @class = "btn btn-success" })
+    }
+</p>

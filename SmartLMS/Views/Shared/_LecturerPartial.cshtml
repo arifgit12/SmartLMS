@@ -1,0 +1,12 @@
+﻿@using SmartLMS.Models
+
+@if (User.IsInRole(UserRoles.Lecturer.ToString()))
+{
+    <li>@Html.ActionLink("Home", "Index", "Home", new { Area = "" }, new { })</li>
+    <li>@Html.ActionLink("Dashboard", "Index", "LecturerDashboard", new { Area = "" }, new { })</li>
+    <li>@Html.ActionLink("Courses", "Index", "Courses", new { Area = "" }, new { })</li>
+    <li>@Html.ActionLink("Lectures", "Index", "Lectures", new { Area = "" }, new { })</li>
+    <li>@Html.ActionLink("Assignments", "Index", "Assignments", new { Area = "" }, new { })</li>
+    <li>@Html.ActionLink("Questions", "Index", "Questions", new { Area = "" }, new { })</li>
+    <li>@Html.ActionLink("Quizs", "Index", "Quizs", new { Area = "" }, new { })</li>
+}
