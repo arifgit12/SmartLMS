@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "Watch Lectures";
+    var files = ViewData["filename"] as Dictionary<string, string>;
+    var file01 = files.FirstOrDefault();
+    var path = ViewBag.LocationPath;
+    var filesrc = path + file01.Value;
+}
+<div class="row top-bottom-padding">
+
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-8">
+            <div id="watch_lecture">
+                <video width="560" height="400" controls>
+                    <source src=@Url.Content(@HttpUtility.UrlPathEncode(filesrc)) type="video/mp4">
+                </video>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h3>@ViewBag.CourseName</h3>
+            <hr />
+            <div class="video_wrapper">
+                <ul class="list-unstyled">
+                    @foreach (var item in ViewData["filename"] as Dictionary<string, string>)
+                    {
+                        <li><a href="#">@item.Value</a></li>
+                    }
+                </ul>
+            </div>
+            
+        </div>
+    </div>    
+</div>
+
