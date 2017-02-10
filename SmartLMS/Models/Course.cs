@@ -18,11 +18,11 @@ namespace SmartLMS.Models
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
         public Category Category { get; set; }
-        public ApplicationUser User { get; set; }
 
         [ScaffoldColumn(false)]
         public int Rating { get; set; }
 
+        public virtual ApplicationUser User { get; set; }
         public virtual ICollection<StudentCourse> Enrollments { get; set; }
         public virtual ICollection<Lecture> Lectures { get; set; }
     }
