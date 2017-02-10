@@ -325,6 +325,7 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Uploads\Lecturers\abcd%40gmail.com\Linear Algebra\Lecture 102.mp4" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -423,6 +424,8 @@
     <Content Include="Views\Quizs\Index.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\AnswerChoices\Index.cshtml" />
+    <Content Include="Views\StudentDashboard\Enroll.cshtml" />
+    <Content Include="Views\StudentDashboard\Courses.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

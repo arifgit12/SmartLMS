@@ -33,7 +33,13 @@
                     @Html.DisplayFor(modelItem => item.CourseName)
                 </td>
                 <td>
-                    @Html.ActionLink("Details", "Details", "Courses", new { id = item.CourseId , Area = "" }, null)
+                    @using (Html.BeginForm("Enroll", "StudentDashboard", new { course = item.CourseId, Area = "" }, FormMethod.Post))
+                    {
+                        @Html.ActionLink("Details", "Details", "Courses", new { id = item.CourseId, Area = "" }, new { @class = "btn btn-success" })
+
+                        @Html.AntiForgeryToken()
+                        <input type="submit" value="Register" class="btn btn-warning" />
+                    }
                 </td>
             </tr>
         }

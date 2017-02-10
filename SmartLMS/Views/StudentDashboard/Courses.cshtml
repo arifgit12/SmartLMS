@@ -1,0 +1,43 @@
+﻿@model IEnumerable<SmartLMS.Models.Course>
+@{
+    ViewBag.Title = "Your Courses";
+}
+
+<div class="row">
+    <div class="top-bottom-padding">
+        <h2>@ViewBag.Title</h2>
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="row">
+        <table class="table table-bordered table-hover table-responsive">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Category.CategoryName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CourseName)
+                </th>
+                <th>@Html.DisplayName("Instructor")</th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Category.CategoryName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CourseName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.User.Email)
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+</div>
+

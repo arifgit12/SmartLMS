@@ -13,9 +13,13 @@ using SmartLMS.Infrastructure.Video;
 namespace SmartLMS.Controllers
 {
     [Authorize(Roles = "User")]
-    public class StudentDashboardController : Controller
+    public class StudentDashboardController : BaseController
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+
+        public StudentDashboardController(ApplicationUserManager userManager) : base(userManager)
+        {
+        }
 
         // GET: StudentDashboard
         public ActionResult Index()
@@ -40,23 +44,27 @@ namespace SmartLMS.Controllers
             var store = new UserStore<ApplicationUser>(new ApplicationDbContext());
             var userManager = new UserManager<ApplicationUser>(store);
             ViewData["Student"] = userManager.FindByNameAsync(User.Identity.Name).Result.Email;
-            var crs = db.Courses.Include(c => c.Category).Include(c => c.User);
+            string getuser = User.Identity.GetUserId();
+            var crs = db.Courses.Include(c => c.Category).Include(c => c.User).Where( e => e.Enrollments.Any( s => s.StudentId == getuser ));
+
             ViewData["StdCrs"] = userManager.FindByNameAsync(User.Identity.Name).Result.Id;
             return View(crs);
         }
 
-        public ActionResult Enroll(String Student, int Course)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Enroll(int? Course)
         {
-            var store = new UserStore<ApplicationUser>(db);
-            var userManager = new UserManager<ApplicationUser>(store);
-
-            ApplicationUser student = userManager.FindByEmailAsync(Student).Result;
+            if(Course == null)
+            {
+                return HttpNotFound();
+            }
+            string getuser = User.Identity.GetUserId();
             Course course = db.Courses.Where(x => x.CourseId == Course).Single();
             var StudentCourse = new StudentCourse();
             StudentCourse.Course = course;
-            StudentCourse.Student = student;
             StudentCourse.CourseId = course.CourseId;
-            StudentCourse.StudentId = student.Id;
+            StudentCourse.StudentId = getuser;
             db.StudentCourses.Add(StudentCourse);
             db.SaveChanges();
             return RedirectToAction("Courses");
