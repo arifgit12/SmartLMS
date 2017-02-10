@@ -70,6 +70,19 @@ namespace SmartLMS.Controllers
             return RedirectToAction("Courses");
         }
 
+        public ActionResult CourseDetails(int? courseId)
+        {
+            if(courseId == null)
+            {
+                return HttpNotFound();
+            }
+            string getuser = User.Identity.GetUserId();
+            var coursemodel = db.Courses.Include(c => c.Category).Include(c => c.User).Include(c => c.Lectures)
+                    .Where(e => e.Enrollments
+                    .Any(s => s.StudentId == getuser && s.CourseId == courseId))
+                    .SingleOrDefault();
+            return View(coursemodel);
+        }
         public ActionResult Lectures()
         {
             var store = User.Identity.GetUserId();
@@ -77,7 +90,7 @@ namespace SmartLMS.Controllers
             List<Course> List = new List<Course>();
             foreach (var crs in getCourse)
             {
-                var course = db.Courses.Include(c => c.Category).Include(c => c.User).Where(y => y.CourseId == crs.CourseId).Single();
+                var course = db.Courses.Include(c => c.Category).Include(c => c.User).Include( c => c.Lectures ).Where(y => y.CourseId == crs.CourseId).Single();
                 List.Add(course);
             }
 

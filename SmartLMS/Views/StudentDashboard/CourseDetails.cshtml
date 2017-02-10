@@ -1,0 +1,49 @@
+﻿@model SmartLMS.Models.Course
+@{
+    ViewBag.Title = "Course Details";
+}
+
+<div class="row">
+    <div class="top-bottom-padding">
+        <h2>@ViewBag.Title</h2>        
+    </div>
+</div>
+@if (Model !=  null)
+{
+    <div class="row">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">@Html.DisplayFor(model => model.CourseName)</h3>
+            </div>
+            <table class="table table-bordered table-hover table-responsive">
+                <tr>
+                    <th>
+                        @Html.DisplayName("Lecture Name")
+                    </th>
+                    <th>Action</th>
+                </tr>
+
+                @foreach (var item in Model.Lectures)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.LectureName)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Details", "Details", new { id = item.LectureId })
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row">
+        <hr/>
+        <h3>Course and Lecute not Found</h3>
+    </div>
+}
+

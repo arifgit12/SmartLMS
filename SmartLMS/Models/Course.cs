@@ -24,5 +24,6 @@ namespace SmartLMS.Models
         public int Rating { get; set; }
 
         public virtual ICollection<StudentCourse> Enrollments { get; set; }
+        public virtual ICollection<Lecture> Lectures { get; set; }
     }
 }
