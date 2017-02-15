@@ -3,10 +3,18 @@
 @if (User.IsInRole(UserRoles.Lecturer.ToString()))
 {
     <li>@Html.ActionLink("Home", "Index", "Home", new { Area = "" }, new { })</li>
-    <li>@Html.ActionLink("Dashboard", "Index", "LecturerDashboard", new { Area = "" }, new { })</li>
     <li>@Html.ActionLink("Courses", "Index", "Courses", new { Area = "" }, new { })</li>
-    <li>@Html.ActionLink("Lectures", "Index", "Lectures", new { Area = "" }, new { })</li>
-    <li>@Html.ActionLink("Assignments", "Index", "Assignments", new { Area = "" }, new { })</li>
-    <li>@Html.ActionLink("Questions", "Index", "Questions", new { Area = "" }, new { })</li>
-    <li>@Html.ActionLink("Quizs", "Index", "Quizs", new { Area = "" }, new { })</li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+            Instructor Dashboard
+            <i class="fa fa-angle-down"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-default">
+            <li>@Html.ActionLink("Dashboard", "Index", "LecturerDashboard", new { Area = "" }, null)</li>
+            <li>@Html.ActionLink("Lectures", "Index", "Courses", new { Area = "" }, null)</li>
+            <li>@Html.ActionLink("Assignments", "Index", "Assignments", new { Area = "" }, null)</li>
+            <li>@Html.ActionLink("Questions", "Index", "Questions", new { Area = "" }, null)</li>
+            <li>@Html.ActionLink("Quizs", "Index", "Quizs", new { Area = "" }, null)</li>
+        </ul>
+    </li>
 }

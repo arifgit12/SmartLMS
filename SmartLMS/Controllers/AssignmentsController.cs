@@ -58,17 +58,25 @@ namespace SmartLMS.Controllers
         {
             if (upload != null && upload.ContentLength > 0)
             {
-                db.Assignment.Add(assignment);
+                var course = db.Courses.Find(assignment.CourseId);
 
-                string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseName;
-                string ext = Path.GetExtension(upload.FileName);
-                string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, assignment.AssignmentName + ext);
-                upload.SaveAs(uploadpath);
+                if(course.Lectures.Count() > 0)
+                {
+                    db.Assignment.Add(assignment);
 
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                    string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseName;
+                    string ext = Path.GetExtension(upload.FileName);
+                    string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, assignment.AssignmentName + ext);
+                    upload.SaveAs(uploadpath);
+
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
 
+            TempData["Error"] = "Unable to Add Assignments";
+            string userid = User.Identity.GetUserId();
+            ViewBag.CourseId = new SelectList(db.Courses.Where(x => x.User.Id == userid), "CourseId", "CourseName");
             return View(assignment);
         }
 

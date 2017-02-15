@@ -11,6 +11,14 @@
     </div>
 </div>
 <div class="row">
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger" id="danger-alert">
+            <button type="button" class="close" data-dismiss="alert">x</button>
+            <strong>Error! </strong>
+            @TempData["Error"].ToString()
+        </div>
+    }
     @using (Html.BeginForm("Create", "Assignments", FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
@@ -70,5 +78,10 @@
                 format: "DD/MM/YYYY HH:mm"
             });
         });
+    </script>
+    <script type="text/javascript">
+            $(document).ready(function () {
+                $("#danger-alert").delay(1000).fadeOut(500);
+            });
     </script>
 }

@@ -25,5 +25,6 @@ namespace SmartLMS.Models
         public virtual ApplicationUser User { get; set; }
         public virtual ICollection<StudentCourse> Enrollments { get; set; }
         public virtual ICollection<Lecture> Lectures { get; set; }
+        public virtual ICollection<Assignment> Assignments { get; set; }
     }
 }

@@ -518,6 +518,7 @@
     <Content Include="Views\Assignments\Create.cshtml" />
     <Content Include="Views\Assignments\Details.cshtml" />
     <Content Include="Views\Assignments\Edit.cshtml" />
+    <Content Include="Views\StudentDashboard\Assignments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -3,7 +3,18 @@
 @if (User.IsInRole(UserRoles.User.ToString()))
 {
     <li>@Html.ActionLink("Home", "Index", "Home", new { Area = "" }, new { })</li>
-    <li>@Html.ActionLink("Dashboard", "Index", "StudentDashboard", new { Area = "" }, new { })</li>
-    <li>@Html.ActionLink("My Courses", "Courses", "StudentDashboard", new { Area = "" }, new { })</li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+            Student Dashboard
+            <i class="fa fa-angle-down"></i>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-default">
+            <li>@Html.ActionLink("Dashboard", "Index", "StudentDashboard", new { area = "" }, null)</li>
+            <li>@Html.ActionLink("My Courses", "Courses", "StudentDashboard", new { area = "" }, null)</li>
+            <li>@Html.ActionLink("My Assignments", "Assignments", "StudentDashboard", new { area = "" }, null)</li>
+            <li>@Html.ActionLink("My Lectures", "Index", "StudentDashboard", new { area = "" }, null)</li>
+            <li>@Html.ActionLink("Take Quiz", "Index", "StudentDashboard", new { area = "" }, null)</li>
+        </ul>
+    </li>
     <li>@Html.ActionLink("Courses", "Course", "Home", new { Area = "" }, new { })</li>
 }
