@@ -526,6 +526,8 @@
     <Content Include="Views\Questions\Details.cshtml" />
     <Content Include="Views\Questions\Edit.cshtml" />
     <Content Include="Views\Questions\Delete.cshtml" />
+    <Content Include="Views\AnswerChoices\Create.cshtml" />
+    <Content Include="Views\AnswerChoices\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

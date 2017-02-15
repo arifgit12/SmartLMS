@@ -16,7 +16,7 @@ namespace SmartLMS.Controllers
         public ActionResult Index()
         {
             var answerchoices = db.Answerchoices.Include(a => a.Question).Include(a => a.Question.Quiz).Where(x => x.Question.Quiz.Course.User.UserName == User.Identity.Name).ToList();
-            return View(answerchoices.ToList());
+            return View(answerchoices);
         }
 
         // GET: AnswerChoices/Details/5
@@ -37,7 +37,8 @@ namespace SmartLMS.Controllers
         // GET: AnswerChoices/Create
         public ActionResult Create()
         {
-            ViewBag.QuestionId = new SelectList(from s in db.Questions.Include(m => m.Quiz).ToList()
+            ViewBag.QuestionId = new SelectList(from s in db.Questions.Include(m => m.Quiz)
+                                        .Where(x => x.Quiz.Course.User.UserName == User.Identity.Name).ToList()
                                         select new
                                         {
                                             QuestionId = s.QuestionId,
@@ -51,7 +52,7 @@ namespace SmartLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "AnswerChoiceId,Choices,IsCorrect,QuestionId")] AnswerChoice answerChoice)
+        public ActionResult Create(AnswerChoice answerChoice)
         {
             if (ModelState.IsValid)
             {
@@ -60,12 +61,13 @@ namespace SmartLMS.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.QuestionId = new SelectList(from s in db.Questions.Include(m => m.Quiz).ToList()
-                                        select new
-                                        {
-                                            QuestionId = s.QuestionId,
-                                            QuestionText = s.QuestionText + "-" + s.Quiz.QuizName
-                                        }, "QuestionId", "QuestionText");
+            ViewBag.QuestionId = new SelectList(from s in db.Questions.Include(m => m.Quiz)
+                                    .Where(x => x.Quiz.Course.User.UserName == User.Identity.Name).ToList().ToList()
+                                    select new
+                                    {
+                                        QuestionId = s.QuestionId,
+                                        QuestionText = s.QuestionText + "  - " + s.Quiz.QuizName
+                                    }, "QuestionId", "QuestionText");
             return View(answerChoice);
         }
 
@@ -81,12 +83,13 @@ namespace SmartLMS.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.QuestionId = new SelectList(from s in db.Questions.Include(m => m.Quiz).ToList()
-                                        select new
-                                        {
-                                            QuestionId = s.QuestionId,
-                                            QuestionText = s.QuestionText + "-" + s.Quiz.QuizName
-                                        }, "QuestionId", "QuestionText");
+            ViewBag.QuestionId = new SelectList(from s in db.Questions.Include(m => m.Quiz)
+                                    .Where(x => x.Quiz.Course.User.UserName == User.Identity.Name).ToList().ToList()
+                                    select new
+                                    {
+                                        QuestionId = s.QuestionId,
+                                        QuestionText = s.QuestionText + "  - " + s.Quiz.QuizName
+                                    }, "QuestionId", "QuestionText", answerChoice.QuestionId);
             return View(answerChoice);
         }
 
@@ -103,12 +106,13 @@ namespace SmartLMS.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.QuestionId = new SelectList(from s in db.Questions.Include(m => m.Quiz).ToList()
-                                        select new
-                                        {
-                                            QuestionId = s.QuestionId,
-                                            QuestionText = s.QuestionText + "-" + s.Quiz.QuizName
-                                        }, "QuestionId", "QuestionText");
+            ViewBag.QuestionId = new SelectList(from s in db.Questions.Include(m => m.Quiz)
+                                    .Where(x => x.Quiz.Course.User.UserName == User.Identity.Name).ToList().ToList()
+                                    select new
+                                    {
+                                        QuestionId = s.QuestionId,
+                                        QuestionText = s.QuestionText + "  - " + s.Quiz.QuizName
+                                    }, "QuestionId", "QuestionText", answerChoice.QuestionId);
             return View(answerChoice);
         }
 

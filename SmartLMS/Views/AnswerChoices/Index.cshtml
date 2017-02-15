@@ -1,7 +1,53 @@
-﻿
+﻿@model IEnumerable<SmartLMS.Models.AnswerChoice>
+
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "List of Answers";
 }
 
-<h2>Index</h2>
+<div class="row">
+    <div class="top-bottom-padding">
+        <h2>
+            @ViewBag.Title
+            @Html.ActionLink("Add Answer", "Create", null, new { @class = "btn btn-success btn-sm pull-right" })
+        </h2>
+        <hr />
+    </div>
+</div>
 
+<div class="row">
+    <table class="table table-bordered table-hover table-responsive">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Question.QuestionText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Choices)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsCorrect)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Question.QuestionText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Choices)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsCorrect)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.AnswerChoiceId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.AnswerChoiceId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.AnswerChoiceId })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
