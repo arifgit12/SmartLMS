@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace SmartLMS.Models
 {
@@ -14,7 +12,7 @@ namespace SmartLMS.Models
         [Required]
         public string QuizName { get; set; }
         public int CourseId { get; set; }
-        public Course Course { get; set; }
+        public virtual Course Course { get; set; }
 
         [Required]
         public DateTime? StartTime { get; set; }

@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace SmartLMS.Models
 {
@@ -17,6 +14,6 @@ namespace SmartLMS.Models
         public bool IsCorrect { get; set; }
         [Required]
         public int QuestionId { get; set; }
-        public Question Question { get; set; }
+        public virtual Question Question { get; set; }
     }
 }

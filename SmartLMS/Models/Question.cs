@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace SmartLMS.Models
 {
@@ -10,7 +8,7 @@ namespace SmartLMS.Models
     {
         [Required]
         public int QuizId { get; set; }
-        public Quiz Quiz { get; set; }
+        public virtual Quiz Quiz { get; set; }
         
         [Required]
         public int QuestionId { get; set; }
