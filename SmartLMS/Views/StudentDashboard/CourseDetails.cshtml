@@ -7,7 +7,6 @@
     <div class="top-bottom-padding">
         <h2>
             @ViewBag.Title
-            @Html.ActionLink("Watch", "SeeLectures", new { courseId = Model.CourseId }, new { @class = "btn btn-success pull-right" })
         </h2>
     </div>
 </div>
@@ -16,7 +15,12 @@
     <div class="row">
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h3 class="panel-title">@Html.DisplayFor(model => model.CourseName)</h3>
+                <h3 class="panel-title">
+                    @Html.DisplayFor(model => model.CourseName)
+                </h3>
+            </div>
+            <div class="panel-body">
+                @Html.ActionLink("Watch", "SeeLectures", new { courseId = Model.CourseId }, new { @class = "btnl btn-success btn-sm pull-right" })
             </div>
             <table class="table table-bordered table-hover table-responsive">
                 <tr>

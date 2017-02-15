@@ -56,19 +56,20 @@ namespace SmartLMS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "AssignmentId,AssignmentName,LastDate,CourseId")] Assignment assignment, HttpPostedFileBase upload)
         {
-
-            db.Assignment.Add(assignment);
-
-            if (upload.ContentLength > 0)
+            if (upload != null && upload.ContentLength > 0)
             {
+                db.Assignment.Add(assignment);
+
                 string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseName;
                 string ext = Path.GetExtension(upload.FileName);
                 string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, assignment.AssignmentName + ext);
                 upload.SaveAs(uploadpath);
+
+                db.SaveChanges();
+                return RedirectToAction("Index");
             }
 
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            return View(assignment);
         }
 
         // GET: Assignments/Edit/5
@@ -84,6 +85,14 @@ namespace SmartLMS.Controllers
                 return HttpNotFound();
             }
             string userid = User.Identity.GetUserId();
+            string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseName;
+
+            string filePath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename);
+
+            var file = Directory.GetFiles(filePath)
+                .Select( f => Path.GetFileNameWithoutExtension(assignment.AssignmentName));
+            ViewBag.FilePath = filePath;
+            ViewBag.FileName = file.FirstOrDefault();
 
             ViewBag.CourseId = new SelectList(db.Courses.Where(x => x.User.Id == userid), "CourseId", "CourseName");
             return View(assignment);
@@ -94,14 +103,32 @@ namespace SmartLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "AssignmentId,AssignmentName,LastDate,CourseId")] Assignment assignment)
+        public ActionResult Edit([Bind(Include = "AssignmentId,AssignmentName,LastDate,CourseId")] Assignment assignment, HttpPostedFileBase upload)
         {
+            string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseName;
+
             if (ModelState.IsValid)
             {
-                db.Entry(assignment).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if ( upload != null && upload.ContentLength > 0)
+                {
+                    db.Entry(assignment).State = EntityState.Modified;                    
+                    string ext = Path.GetExtension(upload.FileName);
+                    string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, assignment.AssignmentName + ext);
+                    upload.SaveAs(uploadpath);
+
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                
             }
+
+            string filePath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename);
+
+            var file = Directory.GetFiles(filePath)
+               .Select(f => Path.GetFileNameWithoutExtension(assignment.AssignmentName));
+            ViewBag.FilePath = filePath;
+            ViewBag.FileName = file.FirstOrDefault();
+
             ViewBag.CourseId = new SelectList(db.Courses, "CourseId", "CourseName", assignment.CourseId);
             return View(assignment);
         }

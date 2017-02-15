@@ -1,0 +1,52 @@
+﻿@model SmartLMS.Models.Assignment
+
+@{
+    ViewBag.Title = "Assignments Details";
+}
+
+<div class="row">
+    <div class="top-bottom-padding">
+        <h2>@ViewBag.Title</h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-6">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Course.CourseName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Course.CourseName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.AssignmentName)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.AssignmentName)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.LastDate)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.LastDate)
+                </dd>
+
+            </dl>
+        </div>
+        <div class="col-md-6">
+
+        </div>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.AssignmentId }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</div>
