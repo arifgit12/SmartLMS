@@ -1,12 +1,54 @@
-﻿
+﻿@model IEnumerable<SmartLMS.Models.Question>
+
 @{
-    ViewBag.Title = "Questions";
+    ViewBag.Title = "List of Questions";
 }
 
 <div class="row">
     <div class="top-bottom-padding">
-        <h2>@ViewBag.Title</h2>
+        <h2>
+            @ViewBag.Title
+            @Html.ActionLink("Add Question", "Create", "Questions", null, new { @Class = "btn btn-success btn-sm pull-right" })
+        </h2>
         <hr />
     </div>
 </div>
 
+<div class="row">
+
+    <table class="table table-bordered table-hover table-responsive">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Quiz.Course.CourseName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quiz.QuizName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuestionText)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quiz.Course.CourseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quiz.QuizName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuestionText)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.QuestionId }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.QuestionId }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.QuestionId })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

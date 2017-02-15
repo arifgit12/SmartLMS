@@ -522,6 +522,10 @@
     <Content Include="Views\Quizs\Create.cshtml" />
     <Content Include="Views\Quizs\Edit.cshtml" />
     <Content Include="Views\Quizs\Details.cshtml" />
+    <Content Include="Views\Questions\Create.cshtml" />
+    <Content Include="Views\Questions\Details.cshtml" />
+    <Content Include="Views\Questions\Edit.cshtml" />
+    <Content Include="Views\Questions\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

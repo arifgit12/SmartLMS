@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Net;
+using Microsoft.AspNet.Identity;
 
 namespace SmartLMS.Controllers
 {
@@ -18,7 +19,9 @@ namespace SmartLMS.Controllers
         // GET: Questions
         public ActionResult Index()
         {
-            var questions = db.Questions.Include(q => q.Quiz);
+            string getuser = User.Identity.GetUserId();
+            var questions = db.Questions.Include(q => q.Quiz)
+                .Where( c => c.Quiz.Course.User.Id == getuser).ToList();
             return View(questions.ToList());
         }
 
@@ -40,7 +43,8 @@ namespace SmartLMS.Controllers
         // GET: Questions/Create
         public ActionResult Create()
         {
-            ViewBag.QuizId = new SelectList(db.Quiz, "QuizId", "QuizName");
+            string getuser = User.Identity.GetUserId();
+            ViewBag.QuizId = new SelectList(db.Quiz.Where(c => c.Course.User.Id == getuser).ToList(), "QuizId", "QuizName");
             return View();
         }
 
@@ -49,7 +53,7 @@ namespace SmartLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "QuestionId,QuizId,QuestionText")] Question question)
+        public ActionResult Create(Question question)
         {
             if (ModelState.IsValid)
             {
@@ -58,7 +62,8 @@ namespace SmartLMS.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.QuizId = new SelectList(db.Quiz, "QuizId", "QuizName", question.QuizId);
+            string getuser = User.Identity.GetUserId();
+            ViewBag.QuizId = new SelectList(db.Quiz.Where(c => c.Course.User.Id == getuser).ToList(), "QuizId", "QuizName", question.QuizId);
             return View(question);
         }
 
@@ -74,7 +79,9 @@ namespace SmartLMS.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.QuizId = new SelectList(db.Quiz, "QuizId", "QuizName", question.QuizId);
+
+            string getuser = User.Identity.GetUserId();
+            ViewBag.QuizId = new SelectList(db.Quiz.Where(c => c.Course.User.Id == getuser).ToList(), "QuizId", "QuizName", question.QuizId);
             return View(question);
         }
 
@@ -83,7 +90,7 @@ namespace SmartLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "QuestionId,QuizId,QuestionText")] Question question)
+        public ActionResult Edit(Question question)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +98,8 @@ namespace SmartLMS.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.QuizId = new SelectList(db.Quiz, "QuizId", "QuizName", question.QuizId);
+            string getuser = User.Identity.GetUserId();
+            ViewBag.QuizId = new SelectList(db.Quiz.Where(c => c.Course.User.Id == getuser).ToList(), "QuizId", "QuizName", question.QuizId);
             return View(question);
         }
 
