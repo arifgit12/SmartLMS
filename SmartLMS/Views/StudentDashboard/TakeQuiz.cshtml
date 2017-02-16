@@ -1,0 +1,45 @@
+﻿@model IEnumerable<SmartLMS.Models.Question>
+
+@{
+    ViewBag.Title = "Take Quiz";
+}
+
+<div class="row">
+    <div class="top-bottom-padding">
+        <h2>
+            @ViewBag.Title
+        </h2>
+    </div>
+</div>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Questions: @item.QuestionText
+                </h3>
+            </div>
+
+            <table class="table table-bordered table-hover table-responsive">
+                <tr>
+                    <th>
+                        @Html.DisplayName("Answers")
+                    </th>
+                </tr>
+
+                @foreach (var question in item.AnswerChoices)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => question.Choices)
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    }
+    
+</div>
