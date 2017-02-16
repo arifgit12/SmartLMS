@@ -10,8 +10,8 @@ namespace SmartLMS.Data.Repository
     {
         IQueryable<T> All();
 
-        IEnumerable<T> Get(Expression<Func<T, bool>> predicate);
-        IEnumerable<T> Get(Expression<Func<T, bool>> predicate, string includeProperties = "");
+        IEnumerable<T> SearchFor(Expression<Func<T, bool>> predicate);
+        IEnumerable<T> SearchFor(Expression<Func<T, bool>> predicate, string includeProperties = "");
 
         T Find(params object[] keys);
         T Find(Expression<Func<T, bool>> predicate);

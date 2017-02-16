@@ -47,6 +47,14 @@ namespace SmartLMS.Data.Repository
             }
         }
 
+        public IRepository<Course> Courses
+        {
+            get
+            {
+                return this.GetRepository<Course>();
+            }
+        }
+
         public int SaveChanges()
         {
             return this.context.SaveChanges();
