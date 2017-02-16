@@ -43,6 +43,7 @@ namespace SmartLMS.Migrations
                 manager.Create(user, "Admin@123");
                 manager.AddToRole(user.Id, UserRoles.Administrator.ToString());
             }
+
             if (!context.Users.Any(u => u.UserName == "lecturer@admin.com"))
             {
                 var store = new UserStore<ApplicationUser>(context);
@@ -57,6 +58,7 @@ namespace SmartLMS.Migrations
                 manager.Create(user, "Abc@123");
                 manager.AddToRole(user.Id, UserRoles.Lecturer.ToString());
             }
+
             if (!context.Users.Any(u => u.UserName == "student@admin.com"))
             {
                 var store = new UserStore<ApplicationUser>(context);

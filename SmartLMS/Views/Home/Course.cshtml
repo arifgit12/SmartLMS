@@ -12,7 +12,7 @@
 </div>
 
 <div class="row">
-    <table class="table">
+    <table class="table table-bordered table-hover table-responsive">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Category.CategoryName)
@@ -35,10 +35,10 @@
                 <td>
                     @using (Html.BeginForm("Enroll", "StudentDashboard", new { course = item.CourseId, Area = "" }, FormMethod.Post))
                     {
-                        @Html.ActionLink("Details", "Details", "Courses", new { id = item.CourseId, Area = "" }, new { @class = "btn btn-success" })
+                        @Html.ActionLink("Details", "Details", "Courses", new { id = item.CourseId, Area = "" }, new { @class = "btn btn-success btn-sm" })
 
                         @Html.AntiForgeryToken()
-                        <input type="submit" value="Register" class="btn btn-warning" />
+                        <input type="submit" value="Register" class="btn btn-warning btn-sm" />
                     }
                 </td>
             </tr>

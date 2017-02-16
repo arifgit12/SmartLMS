@@ -6,10 +6,11 @@
 
 <div class="row">
     <div class="top-bottom-padding">
-        <h2>@ViewBag.Title</h2>
-        <p>
-            @Html.ActionLink("Add New Course", "Create")
-        </p>
+        <h2>
+            @ViewBag.Title
+            @Html.ActionLink("Add New Course", "Create", null, new { @class="btn btn-success btn-sm pull-right" })
+        </h2>
+
         <hr />
     </div>
 </div>
