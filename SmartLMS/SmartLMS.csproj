@@ -290,9 +290,12 @@
     <Compile Include="Data\Repository\CommonRepository.cs" />
     <Compile Include="Data\Repository\GenericRepository.cs" />
     <Compile Include="Data\Repository\IRepository.cs" />
+    <Compile Include="Data\Repository\ISmartLMSData.cs" />
+    <Compile Include="Data\Repository\SmartLMSData.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\Mapping\AutoMapperConfiguration.cs" />
     <Compile Include="Infrastructure\Video\VideoResult.cs" />
     <Compile Include="Migrations\201702091211588_intial_create.cs" />
     <Compile Include="Migrations\201702091211588_intial_create.Designer.cs">
@@ -321,6 +324,7 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\CategoryViewModel.cs" />
     <Compile Include="ViewModels\ExamTakingModel.cs" />
     <Compile Include="ViewModels\QuizTakingVM.cs" />
   </ItemGroup>
