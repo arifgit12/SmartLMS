@@ -17,7 +17,7 @@ namespace SmartLMS.Data.Repository
         T Find(Expression<Func<T, bool>> predicate);
         T Find(Expression<Func<T, bool>> predicate, string includeProperties = "");
 
-        T Create(T t);
+        T Add(T t);
         void Update(T t);
 
         void Delete(object id);

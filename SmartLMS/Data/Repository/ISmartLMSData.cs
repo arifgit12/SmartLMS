@@ -11,5 +11,7 @@ namespace SmartLMS.Data.Repository
     {
         IRepository<ApplicationUser> Users { get; }
         IRepository<Lecture> Lectures { get; }
+        IRepository<Category> Categories { get; }
+        int SaveChanges();
     }
 }

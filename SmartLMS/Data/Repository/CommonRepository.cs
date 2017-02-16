@@ -12,14 +12,14 @@ namespace SmartLMS.Data.Repository
         public void Create(T obj)
         {
             IRepository<T> repository = new GenericRepository<T>(context);
-            repository.Create(obj);
+            repository.Add(obj);
             repository.Save();
         }
 
         public T CreateAndGet(T obj)
         {
             IRepository<T> repository = new GenericRepository<T>(context);
-            var objDTO = repository.Create(obj);
+            var objDTO = repository.Add(obj);
             repository.Save();
             return objDTO;
         }

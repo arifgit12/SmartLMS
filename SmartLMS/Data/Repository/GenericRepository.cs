@@ -34,7 +34,7 @@ namespace SmartLMS.Data.Repository
             return DbSet.Count();
         }
 
-        public T Create(T entity)
+        public T Add(T entity)
         {
             var newentity = DbSet.Add(entity);
             Save();
