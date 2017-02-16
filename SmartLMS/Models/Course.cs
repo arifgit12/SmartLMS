@@ -10,14 +10,25 @@ namespace SmartLMS.Models
     public class Course
     {
         [Key]
+        [Display(Name = "Course")]
         public int CourseId { get; set; }
+
         [Required]
+        [Display(Name = "Course Name")]
         public string CourseName { get; set; }
+
+        [Required(ErrorMessage = "The module must have a description!")]
+        [Display(Name = "Description")]
+        public string Description { get; set; }
 
         [Required]
         [ForeignKey("Category")]
+        [Display(Name = "Category")]
         public int CategoryId { get; set; }
         public Category Category { get; set; }
+
+        [Display(Name = "Start Date")]
+        public DateTime? StartDate { get; set; }
 
         [ScaffoldColumn(false)]
         public int Rating { get; set; }

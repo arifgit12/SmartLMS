@@ -301,6 +301,10 @@
     <Compile Include="Migrations\201702091211588_intial_create.Designer.cs">
       <DependentUpon>201702091211588_intial_create.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201702161843581_fileNameadded.cs" />
+    <Compile Include="Migrations\201702161843581_fileNameadded.Designer.cs">
+      <DependentUpon>201702161843581_fileNameadded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -310,6 +314,8 @@
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Certificate.cs" />
     <Compile Include="Models\Contact.cs" />
+    <Compile Include="Models\Core\EntityBase.cs" />
+    <Compile Include="Models\Core\IdentityGenerator.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Lecture.cs" />
@@ -557,6 +563,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201702091211588_intial_create.resx">
       <DependentUpon>201702091211588_intial_create.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201702161843581_fileNameadded.resx">
+      <DependentUpon>201702161843581_fileNameadded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
