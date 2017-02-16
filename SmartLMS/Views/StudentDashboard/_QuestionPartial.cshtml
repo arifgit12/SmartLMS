@@ -1,0 +1,28 @@
+﻿@model SmartLMS.Models.Question
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            Questions: @Model.QuestionText
+        </h3>
+    </div>   
+    @{
+        foreach (var question in Model.AnswerChoices)
+        {
+            @Html.Partial("_ChoicePartial", question)
+            @Html.Raw(" ")
+        }
+    }
+    @*@{
+        int counter = 1;
+        foreach(var question in Model.AnswerChoices)
+        {
+            @Html.Raw(@counter)
+            @Html.Raw(". ")
+            @Html.Partial("_ChoicePartial", question)
+            @Html.Raw("<br />")
+            counter++;
+        }
+    }*@
+</div>
+

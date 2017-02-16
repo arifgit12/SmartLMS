@@ -530,6 +530,8 @@
     <Content Include="Views\AnswerChoices\Edit.cshtml" />
     <Content Include="Views\StudentDashboard\SeeQuiz.cshtml" />
     <Content Include="Views\StudentDashboard\TakeQuiz.cshtml" />
+    <Content Include="Views\StudentDashboard\_QuestionPartial.cshtml" />
+    <Content Include="Views\StudentDashboard\_ChoicePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
