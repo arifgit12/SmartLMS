@@ -182,17 +182,15 @@ namespace SmartLMS.Controllers
             return View(List);
         }
 
-        public ActionResult SeeQuiz(int course)
+        public ActionResult SeeQuiz(int? courseId)
         {
-            //var store = new UserStore<ApplicationUser>(new ApplicationDbContext());
-            //var userManager = new UserManager<ApplicationUser>(store);
-            //ViewData["Student"] = userManager.FindByNameAsync(User.Identity.Name).Result;
-            ApplicationDbContext db = new ApplicationDbContext();
-
             ViewData["std"] = User.Identity.GetUserId();
 
-
-            var Quizez = db.Quiz.Include(s => s.Students).Where(x => x.CourseId == course).ToList();
+            if(courseId == null)
+            {
+                return HttpNotFound();
+            }
+            var Quizez = db.Quiz.Include(s => s.Students).Where(x => x.CourseId == courseId).ToList();
             return View(Quizez);
         }
 

@@ -37,6 +37,7 @@
                     </td>
                     <td>
                         @Html.ActionLink("Details", "CourseDetails", new { courseId = item.CourseId }, new { @class = "btn btn-success" })
+                        @Html.ActionLink("Quiz", "SeeQuiz", new { courseId = item.CourseId }, new { @class = "btn btn-success" })
                     </td>
                 </tr>
             }
