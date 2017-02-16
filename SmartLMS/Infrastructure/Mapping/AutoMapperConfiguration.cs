@@ -1,9 +1,5 @@
 ﻿using SmartLMS.Models;
 using SmartLMS.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace SmartLMS.Infrastructure.Mapping
 {
@@ -15,6 +11,9 @@ namespace SmartLMS.Infrastructure.Mapping
             {
                 config.CreateMap<Category, CategoryViewModel>();
                 config.CreateMap<CategoryViewModel, Category>();
+
+                config.CreateMap<Course, CourseViewModel>();
+                config.CreateMap<CourseViewModel, Course>();
             });
         }
     }

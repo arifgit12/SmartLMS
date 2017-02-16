@@ -331,6 +331,7 @@
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\CategoryViewModel.cs" />
+    <Compile Include="ViewModels\CourseViewModel.cs" />
     <Compile Include="ViewModels\ExamTakingModel.cs" />
     <Compile Include="ViewModels\QuizTakingVM.cs" />
   </ItemGroup>

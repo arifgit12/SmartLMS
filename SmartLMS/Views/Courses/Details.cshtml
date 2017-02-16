@@ -1,4 +1,4 @@
-﻿@model SmartLMS.Models.Course
+﻿@model SmartLMS.ViewModels.CourseViewModel
 @using SmartLMS.Models
 @{
     ViewBag.Title = "Course Details";
@@ -27,6 +27,20 @@
 
         <dd>
             @Html.DisplayFor(model => model.CourseName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartDate)
         </dd>
 
     </dl>

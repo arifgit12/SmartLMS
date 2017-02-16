@@ -1,56 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using SmartLMS.Models;
 using Microsoft.AspNet.Identity;
+using SmartLMS.Data.Repository;
+using SmartLMS.ViewModels;
 
 namespace SmartLMS.Controllers
 {
     [Authorize(Roles = "Lecturer")]
-    public class CoursesController : BaseController
+    public class CoursesController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
-        public CoursesController(ApplicationUserManager userManager) : base(userManager)
+        //private ApplicationDbContext db = new ApplicationDbContext();
+        protected ISmartLMSData Data { get; private set; }
+        public CoursesController(ISmartLMSData data)
         {
-
+            this.Data = data;
         }
 
         // GET: Courses
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             string getuser = User.Identity.GetUserId();
-            var courses = db.Courses.Include(c => c.Category).Include(c => c.User).Where(c => c.User.Id == getuser);
-            return View(await courses.ToListAsync());
+            var courses = this.Data.Courses.SearchFor(c => c.User.Id == getuser).ToList();
+            var model = AutoMapper.Mapper.Map<IEnumerable<CourseViewModel>>(courses);
+            return View(model);
         }
 
         // GET: Courses/Details/5
         [AllowAnonymous]
-        public async Task<ActionResult> Details(int? id)
+        public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Course course = await db.Courses.Include(c => c.Category).Where( d => d.CourseId == id.Value).FirstOrDefaultAsync();
-            
+
+            Course course = this.Data.Courses.SearchFor(d => d.CourseId == id.Value).FirstOrDefault();
+
             if (course == null)
             {
                 return HttpNotFound();
             }
-            return View(course);
+            var model = AutoMapper.Mapper.Map<CourseViewModel>(course);
+            return View(model);
         }
 
         // GET: Courses/Create
         public ActionResult Create()
         {
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName");
+            ViewBag.CategoryId = new SelectList(this.Data.Categories.All(), "CategoryId", "CategoryName");
             return View();
         }
 
@@ -59,35 +60,39 @@ namespace SmartLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "CourseId,CourseName,CategoryId,Rating")] Course course)
+        public ActionResult Create(CourseViewModel model)
         {
             string getuser = User.Identity.GetUserId();
             if (ModelState.IsValid)
             {
-                course.User = db.Users.Where(u => u.Id == getuser).Single();
-                db.Courses.Add(course);
-                await db.SaveChangesAsync();
+                Course course = AutoMapper.Mapper.Map<Course>(model);
+                course.User = this.Data.Users.SearchFor(u => u.Id == getuser).SingleOrDefault();
+                this.Data.Courses.Add(course);
+                this.Data.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName", course.CategoryId);
-            return View(course);
+            ViewBag.CategoryId = new SelectList(this.Data.Categories.All(), "CategoryId", "CategoryName", model.CategoryId);
+
+            return View(model);
         }
 
         // GET: Courses/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Course course = await db.Courses.FindAsync(id);
+            Course course = this.Data.Courses.Find(id);
             if (course == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName", course.CategoryId);
-            return View(course);
+            ViewBag.CategoryId = new SelectList(this.Data.Categories.All(), "CategoryId", "CategoryName", course.CategoryId);
+            var model = AutoMapper.Mapper.Map<CourseViewModel>(course);
+
+            return View(model);
         }
 
         // POST: Courses/Edit/5
@@ -95,51 +100,58 @@ namespace SmartLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Course course)
+        public ActionResult Edit(CourseViewModel model)
         {
+            string getuser = User.Identity.GetUserId();
+            model.Category = this.Data.Categories.Find(model.CategoryId);
             if (ModelState.IsValid)
             {
-                db.Entry(course).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                Course course = AutoMapper.Mapper.Map<Course>(model);
+                course.User = this.Data.Users.SearchFor(u => u.Id == getuser).SingleOrDefault();
+                this.Data.Courses.Update(course);
+                this.Data.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "CategoryName", course.CategoryId);
-            return View(course);
+            ModelState.AddModelError(string.Empty, "Unable to edit");
+            ViewBag.CategoryId = new SelectList(this.Data.Categories.All(), "CategoryId", "CategoryName", model.CategoryId);
+            return View(model);
         }
 
         // GET: Courses/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Course course = await db.Courses.FindAsync(id);
+            Course course = this.Data.Courses.Find(id);
             if (course == null)
             {
                 return HttpNotFound();
             }
-            return View(course);
+
+            var model = AutoMapper.Mapper.Map<CourseViewModel>(course);
+            return View(model);
         }
 
         // POST: Courses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id)
         {
-            Course course = await db.Courses.FindAsync(id);
-            db.Courses.Remove(course);
-            await db.SaveChangesAsync();
+            Course course = this.Data.Courses.Find(id);
+            this.Data.Courses.Delete(course);
+            this.Data.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }
