@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using SmartLMS.Models;
 using Microsoft.AspNet.Identity;
 using System.IO;
+using SmartLMS.Infrastructure.FileHelpers;
 
 namespace SmartLMS.Controllers
 {
@@ -76,18 +77,22 @@ namespace SmartLMS.Controllers
             {
                 lecture.User = db.Users.Where(u => u.Id == getuser).Single();
 
-                db.Lectures.Add(lecture);
-                await db.SaveChangesAsync();
                 if (upload.ContentLength > 0)
                 {
                     string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseName;
-                    string uploadDirectoryPath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename);
-                    if (!Directory.Exists(uploadDirectoryPath))
-                    {
-                        Directory.CreateDirectory(uploadDirectoryPath);
-                    }
-                    string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, lecture.LectureName + ".mp4");
-                    upload.SaveAs(uploadpath);
+                    string uploadedFileName = FileUtils.UploadFile(upload, User.Identity.GetUserName(), coursename);
+
+                    lecture.FileName = uploadedFileName;
+
+                    db.Lectures.Add(lecture);
+                    await db.SaveChangesAsync();
+                    //string uploadDirectoryPath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename);
+                    //if (!Directory.Exists(uploadDirectoryPath))
+                    //{
+                    //    Directory.CreateDirectory(uploadDirectoryPath);
+                    //}
+                    //string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, lecture.LectureName + ".mp4");
+                    //upload.SaveAs(uploadpath);
                 }
 
                 return RedirectToAction("Index");

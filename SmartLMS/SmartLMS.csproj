@@ -295,6 +295,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\FileHelpers\FileUtils.cs" />
     <Compile Include="Infrastructure\Mapping\AutoMapperConfiguration.cs" />
     <Compile Include="Infrastructure\Video\VideoResult.cs" />
     <Compile Include="Migrations\201702091211588_intial_create.cs" />
@@ -553,7 +554,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Infrastructure\FileHelpers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

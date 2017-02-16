@@ -67,6 +67,7 @@ namespace SmartLMS.Controllers
             StudentCourse.Course = course;
             StudentCourse.CourseId = course.CourseId;
             StudentCourse.StudentId = getuser;
+            StudentCourse.Status = EnrollStatus.Accepted;
             db.StudentCourses.Add(StudentCourse);
             db.SaveChanges();
             return RedirectToAction("Courses");
