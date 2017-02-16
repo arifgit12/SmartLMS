@@ -286,6 +286,10 @@
     <Compile Include="Controllers\QuizsController.cs" />
     <Compile Include="Controllers\StudentDashboardController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
+    <Compile Include="Data\BLL\QuestionSetManager.cs" />
+    <Compile Include="Data\Repository\CommonRepository.cs" />
+    <Compile Include="Data\Repository\GenericRepository.cs" />
+    <Compile Include="Data\Repository\IRepository.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -317,6 +321,8 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\ExamTakingModel.cs" />
+    <Compile Include="ViewModels\QuizTakingVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -532,6 +538,7 @@
     <Content Include="Views\StudentDashboard\TakeQuiz.cshtml" />
     <Content Include="Views\StudentDashboard\_QuestionPartial.cshtml" />
     <Content Include="Views\StudentDashboard\_ChoicePartial.cshtml" />
+    <Content Include="Views\StudentDashboard\QuizHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

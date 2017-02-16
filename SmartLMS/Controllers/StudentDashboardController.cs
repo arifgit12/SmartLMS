@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using System.IO;
 using SmartLMS.Infrastructure.Video;
 using System.Net;
+using SmartLMS.ViewModels;
 
 namespace SmartLMS.Controllers
 {
@@ -197,8 +198,69 @@ namespace SmartLMS.Controllers
         public ActionResult TakeQuiz(int quiz)
         {
             var quest = db.Questions.Include(x => x.AnswerChoices).Where(m => m.QuizId == quiz).ToList();
+            List<QuizTakingVM> examtakingModels = new List<QuizTakingVM>();
+
+            foreach (var question in quest)
+            {
+                var examTakingModel = new QuizTakingVM();
+                examTakingModel.QuestionId = question.QuestionId;
+                examtakingModels.Add(examTakingModel);
+            }
+
             ViewData["quizId"] = quiz;
-            return View(quest);
+            return View(examtakingModels);
+        }
+
+        [HttpPost]
+        public ActionResult TakeQuiz(List<QuizTakingVM> examTakingModels, int? quizId)
+        {
+
+            if(quizId == null)
+            {
+                return HttpNotFound();
+            }
+
+            var quiz = new StudentQuiz();
+            var store = new UserStore<ApplicationUser>(db);
+            var userManager = new UserManager<ApplicationUser>(store);
+            quiz.Student = userManager.FindByNameAsync(User.Identity.Name).Result;
+            quiz.StudentId = User.Identity.GetUserId();
+
+            int totalMarks = db.Quiz.Where(x => x.QuizId == quizId).Single().Score;
+            double marksPerQuestion = totalMarks / examTakingModels.Count();
+
+            double obtainedMarks = 0;
+
+            foreach (var examModel in examTakingModels)
+            {
+                if(examModel.Question.AnswerChoices.Where(ans => ans.AnswerChoiceId == examModel.Choice).SingleOrDefault().IsCorrect == true)
+                {
+                    obtainedMarks += marksPerQuestion;
+                }
+            }
+
+            quiz.QuizId = quizId.Value;
+            quiz.Quiz = db.Quiz.Where(x => x.QuizId == quizId).Single();
+            quiz.Marks = obtainedMarks;
+
+            db.StudentQuiz.Add(quiz);
+            db.SaveChanges();
+
+            ViewData["marks"] = obtainedMarks;
+
+            return RedirectToAction("QuizHistory");
+        }
+
+        public ActionResult QuizHistory()
+        {
+            var store = new UserStore<ApplicationUser>(db);
+            var userManager = new UserManager<ApplicationUser>(store);
+            var student = userManager.FindByNameAsync(User.Identity.Name).Result;
+
+            var quiz = db.StudentQuiz.Where( sid => sid.StudentId == student.Id ).ToList();
+
+            return View(quiz);
+
         }
 
         [HttpPost]

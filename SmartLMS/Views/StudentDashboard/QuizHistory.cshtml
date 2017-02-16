@@ -1,0 +1,40 @@
+﻿@model IEnumerable<SmartLMS.Models.StudentQuiz>
+
+@{
+    ViewBag.Title = "Quiz History";
+}
+
+<div class="row">
+    <div class="top-bottom-padding">
+        <h2>
+            @ViewBag.Title
+        </h2>
+        <hr />
+    </div>
+</div>
+
+<div class="row">
+    <table class="table table-bordered table-hover table-responsive">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Quiz.QuizName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Marks)
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quiz.QuizName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Marks)
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

@@ -1,7 +1,8 @@
-﻿@model IEnumerable<SmartLMS.Models.Question>
+﻿@model List<SmartLMS.ViewModels.QuizTakingVM>
 
 @{
     ViewBag.Title = "Take Quiz";
+    var qId = ViewData["quizId"];
 }
 
 <div class="row">
@@ -9,13 +10,30 @@
         <h2>
             @ViewBag.Title
         </h2>
+        <hr />
     </div>
 </div>
 
 <div class="row">
-    @foreach (var item in Model)
+    @using (Html.BeginForm("TakeQuiz", "StudentDashboard", new { quizId = @qId }, FormMethod.Post))
     {
-        @Html.Partial("_QuestionPartial", item)
+        for(int i = 0; i < Model.Count(); i++)
+        {
+            <div id="@Model[i].Question.QuestionId">
+                @Html.HiddenFor(modelItem => Model[i].QuestionId)
+                @Html.DisplayTextFor(modelItem => Model[i].Question.QuestionText)
+                <ol type="A" id="option_menu">
+                    @for(int j = 0; j < Model[i].Question.AnswerChoices.Count(); j++)
+                    {
+                        <li>@Html.DisplayTextFor(m => Model[i].Question.AnswerChoices[j].Choices) 
+                            @Html.RadioButtonFor(x => Model[i].Choice, Model[i].Question.AnswerChoices[j].AnswerChoiceId)
+                        </li>
+                    }                    
+                </ol>
+            </div>
+            <hr />
+        }
+        <input type="submit" value="Submit" class="btn btn-success" />
     }
-    
 </div>
+@*@Html.Partial("_QuestionPartial", item)*@
