@@ -7,34 +7,26 @@ using System.Linq.Expressions;
 
 namespace SmartLMS.Data.Repository
 {
-    public class GenericRepository<TObject> : IRepository<TObject> where TObject : class
+    public class GenericRepository<T> : IRepository<T> where T : class
     {
         private ApplicationDbContext _context = null;
-        private DbSet<TObject> _entitySet = null;
+        private DbSet<T> _entitySet = null;
 
         public GenericRepository(ApplicationDbContext Context)
         {
             this._context = Context;
-            this._entitySet = Context.Set<TObject>();
+            this._entitySet = Context.Set<T>();
         }
 
-        public ApplicationDbContext DbContext
-        {
-            get
-            {
-                return _context;
-            }
-        }
-
-        protected DbSet<TObject> DbSet
+        protected DbSet<T> DbSet
         {
             get
             { return _entitySet; }
         }
 
-        public IEnumerable<TObject> All()
+        public IQueryable<T> All()
         {
-            return DbSet.AsEnumerable<TObject>();
+            return DbSet.AsQueryable<T>();
         }
 
         public int Count()
@@ -42,53 +34,46 @@ namespace SmartLMS.Data.Repository
             return DbSet.Count();
         }
 
-        public TObject Create(TObject entry)
+        public T Create(T entity)
         {
-            var newEntry = DbSet.Add(entry);
+            var newentity = DbSet.Add(entity);
             Save();
-            return newEntry;
+            return newentity;
         }
 
-        public void Delete(TObject entry)
+        public void Delete(T entity)
         {
-            try
-            {
-                if (entry == null)
-                    return;
-
-                if (_context.Entry(entry).State == EntityState.Detached)
-                {
-                    DbSet.Attach(entry);
-                }
-                DbSet.Remove(entry);
-                Save();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.StackTrace);
-            }
+            this.ChangeEntityState(entity, EntityState.Deleted);
 
         }
 
         public void Delete(object id)
         {
-            TObject entityToDelete = DbSet.Find(id);
-            Delete(entityToDelete);
+            T entityToDelete = DbSet.Find(id);
+            if (entityToDelete != null)
+            {
+                Delete(entityToDelete);
+            }                
         }
 
-        public virtual TObject Find(Expression<Func<TObject, bool>> predicate)
+        public void Detach(T entity)
+        {
+            this.ChangeEntityState(entity, EntityState.Detached);
+        }
+
+        public virtual T Find(Expression<Func<T, bool>> predicate)
         {
             return DbSet.FirstOrDefault(predicate);
         }
 
-        public TObject Find(params object[] keys)
+        public T Find(params object[] keys)
         {
             return DbSet.Find(keys);
         }
         
-        public virtual TObject Find(Expression<Func<TObject, bool>> predicate, string includeProperties = "")
+        public virtual T Find(Expression<Func<T, bool>> predicate, string includeProperties = "")
         {
-            IQueryable<TObject> query = DbSet;
+            IQueryable<T> query = DbSet;
 
             foreach (var includeProperty in includeProperties.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             { query = query.Include(includeProperty); }
@@ -96,14 +81,14 @@ namespace SmartLMS.Data.Repository
             return query.FirstOrDefault(predicate);
         }
 
-        public IEnumerable<TObject> Get(Expression<Func<TObject, bool>> predicate)
+        public IEnumerable<T> Get(Expression<Func<T, bool>> predicate)
         {
-            return DbSet.Where(predicate).AsEnumerable<TObject>();
+            return DbSet.Where(predicate).AsEnumerable<T>();
         }
 
-        public IEnumerable<TObject> Get(Expression<Func<TObject, bool>> predicate, string includeProperties = "")
+        public IEnumerable<T> Get(Expression<Func<T, bool>> predicate, string includeProperties = "")
         {
-            IQueryable<TObject> query = DbSet;
+            IQueryable<T> query = DbSet;
 
             query = query.Where(predicate);
 
@@ -115,14 +100,23 @@ namespace SmartLMS.Data.Repository
 
         public void Save()
         {
-            _context.SaveChanges();
+            this._context.SaveChanges();
         }
 
-        public void Update(TObject entry)
+        public void Update(T entity)
         {
-            DbSet.Attach(entry);
-            _context.Entry(entry).State = EntityState.Modified;
-            Save();
+            this.ChangeEntityState(entity, EntityState.Modified);
+        }
+
+        private void ChangeEntityState(T entity, EntityState state)
+        {
+            var entry = this._context.Entry(entity);
+            if (entry.State == EntityState.Detached)
+            {
+                this.DbSet.Attach(entity);
+            }
+
+            entry.State = state;
         }
     }
 }

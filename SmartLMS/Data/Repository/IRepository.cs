@@ -3,14 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SmartLMS.Data.Repository
 {
     public interface IRepository<T> where T : class
     {
-        IEnumerable<T> All();
+        IQueryable<T> All();
 
         IEnumerable<T> Get(Expression<Func<T, bool>> predicate);
         IEnumerable<T> Get(Expression<Func<T, bool>> predicate, string includeProperties = "");
@@ -24,9 +22,8 @@ namespace SmartLMS.Data.Repository
 
         void Delete(object id);
         void Delete(T t);
+        void Detach(T entity);
         void Save();
         int Count();
-
-        ApplicationDbContext DbContext { get; }
     }
 }
