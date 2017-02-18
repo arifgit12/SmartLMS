@@ -48,7 +48,7 @@ namespace SmartLMS.Controllers
             lecture.User = db.Users.Where(u => u.Id == getuser).Single();
             db.Lectures.Add(lecture);
 
-            string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseName;
+            string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseCode;
             string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, lecture.LectureName + ".mp4");
             ViewData["lecture"] = uploadpath;
             return View(lecture);
@@ -79,7 +79,7 @@ namespace SmartLMS.Controllers
 
                 if (upload.ContentLength > 0)
                 {
-                    string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseName;
+                    string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseCode;
                     string uploadedFileName = FileUtils.UploadFile(upload, User.Identity.GetUserName(), coursename);
 
                     lecture.FileName = uploadedFileName;
@@ -131,7 +131,7 @@ namespace SmartLMS.Controllers
             {
                 if (upload.ContentLength > 0)
                 {
-                    string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseName;
+                    string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseCode;
                     //string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, lecture.LectureName + ".mp4");
                     //upload.SaveAs(uploadpath);
                     string uploadedFileName = FileUtils.UploadFile(upload, User.Identity.GetUserName(), coursename);
@@ -169,7 +169,7 @@ namespace SmartLMS.Controllers
         {
             Lecture lecture = await db.Lectures.FindAsync(id);
             db.Lectures.Remove(lecture);
-            string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseName;
+            string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseCode;
             string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, lecture.LectureName + ".mp4");
             System.IO.File.Delete(uploadpath);
 

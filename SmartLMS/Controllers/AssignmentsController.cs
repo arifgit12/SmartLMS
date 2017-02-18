@@ -36,7 +36,7 @@ namespace SmartLMS.Controllers
             {
                 return HttpNotFound();
             }
-            string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseName;
+            string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseCode;
             ViewBag.FilePath = Server.MapPath(FileUtils.UPLOAD_PATH + User.Identity.GetUserName() + "/" + coursename + "/" + assignment.FileName);
 
             return View(assignment);
@@ -64,7 +64,7 @@ namespace SmartLMS.Controllers
 
                 if(course.Lectures.Count() > 0)
                 {
-                    string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseName;
+                    string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseCode;
                     //string ext = Path.GetExtension(upload.FileName);
                     //string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, assignment.AssignmentName + ext);
                     //upload.SaveAs(uploadpath);
@@ -97,7 +97,7 @@ namespace SmartLMS.Controllers
                 return HttpNotFound();
             }
             string userid = User.Identity.GetUserId();
-            string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseName;
+            string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseCode;
 
             ViewBag.CourseId = new SelectList(db.Courses.Where(x => x.User.Id == userid), "CourseId", "CourseName");
             return View(assignment);
@@ -110,7 +110,7 @@ namespace SmartLMS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Assignment assignment, HttpPostedFileBase upload)
         {
-            string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseName;
+            string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseCode;
 
             if (ModelState.IsValid)
             {

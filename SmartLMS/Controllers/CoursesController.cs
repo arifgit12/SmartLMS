@@ -7,6 +7,7 @@ using SmartLMS.Models;
 using Microsoft.AspNet.Identity;
 using SmartLMS.Data.Repository;
 using SmartLMS.ViewModels;
+using System.Text.RegularExpressions;
 
 namespace SmartLMS.Controllers
 {
@@ -63,9 +64,11 @@ namespace SmartLMS.Controllers
         public ActionResult Create(CourseViewModel model)
         {
             string getuser = User.Identity.GetUserId();
+            
             if (ModelState.IsValid)
             {
                 Course course = AutoMapper.Mapper.Map<Course>(model);
+                course.CourseCode = Regex.Replace(model.CourseName, @"\s", "");
                 course.User = this.Data.Users.SearchFor(u => u.Id == getuser).SingleOrDefault();
                 this.Data.Courses.Add(course);
                 this.Data.SaveChanges();
@@ -73,6 +76,7 @@ namespace SmartLMS.Controllers
             }
 
             ViewBag.CategoryId = new SelectList(this.Data.Categories.All(), "CategoryId", "CategoryName", model.CategoryId);
+            ModelState.AddModelError(String.Empty, "Course already Created. Choose different Name");
 
             return View(model);
         }
@@ -107,12 +111,15 @@ namespace SmartLMS.Controllers
             if (ModelState.IsValid)
             {
                 Course course = AutoMapper.Mapper.Map<Course>(model);
+                course.CourseCode = Regex.Replace(model.CourseName, @"\s", "");
+                // Rename the file uploads
                 course.User = this.Data.Users.SearchFor(u => u.Id == getuser).SingleOrDefault();
                 this.Data.Courses.Update(course);
                 this.Data.SaveChanges();
                 return RedirectToAction("Index");
             }
             ModelState.AddModelError(string.Empty, "Unable to edit");
+            ModelState.AddModelError(String.Empty, "Course already Created. Choose different Name");
             ViewBag.CategoryId = new SelectList(this.Data.Categories.All(), "CategoryId", "CategoryName", model.CategoryId);
             return View(model);
         }
