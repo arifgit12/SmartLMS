@@ -14,6 +14,12 @@ namespace SmartLMS.Models
         public int CourseId { get; set; }
 
         [Required]
+        [MaxLength(20)]
+        //[RegularExpression(@"^\S\,*$", ErrorMessage = "No white space allowed")]
+        [Display(Name = "Course Code")]
+        public string CourseCode { get; set; }
+
+        [Required]
         [Display(Name = "Course Name")]
         public string CourseName { get; set; }
 

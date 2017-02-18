@@ -298,13 +298,9 @@
     <Compile Include="Infrastructure\FileHelpers\FileUtils.cs" />
     <Compile Include="Infrastructure\Mapping\AutoMapperConfiguration.cs" />
     <Compile Include="Infrastructure\Video\VideoResult.cs" />
-    <Compile Include="Migrations\201702091211588_intial_create.cs" />
-    <Compile Include="Migrations\201702091211588_intial_create.Designer.cs">
-      <DependentUpon>201702091211588_intial_create.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201702161843581_fileNameadded.cs" />
-    <Compile Include="Migrations\201702161843581_fileNameadded.Designer.cs">
-      <DependentUpon>201702161843581_fileNameadded.cs</DependentUpon>
+    <Compile Include="Migrations\201702180812115_inital_create_db.cs" />
+    <Compile Include="Migrations\201702180812115_inital_create_db.Designer.cs">
+      <DependentUpon>201702180812115_inital_create_db.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -564,11 +560,8 @@
     <Content Include="Scripts\jquery-3.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201702091211588_intial_create.resx">
-      <DependentUpon>201702091211588_intial_create.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201702161843581_fileNameadded.resx">
-      <DependentUpon>201702161843581_fileNameadded.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702180812115_inital_create_db.resx">
+      <DependentUpon>201702180812115_inital_create_db.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
