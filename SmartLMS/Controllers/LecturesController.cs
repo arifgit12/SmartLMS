@@ -129,19 +129,21 @@ namespace SmartLMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(lecture).State = EntityState.Modified;
-                await db.SaveChangesAsync();
                 if (upload.ContentLength > 0)
                 {
                     string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseName;
-                    string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, lecture.LectureName + ".mp4");
-                    upload.SaveAs(uploadpath);
+                    //string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, lecture.LectureName + ".mp4");
+                    //upload.SaveAs(uploadpath);
+                    string uploadedFileName = FileUtils.UploadFile(upload, User.Identity.GetUserName(), coursename);
+
+                    lecture.FileName = uploadedFileName;
                 }
 
+                db.Entry(lecture).State = EntityState.Modified;
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             ViewBag.CourseId = new SelectList(db.Courses, "CourseId", "CourseName", lecture.CourseId);
-            //ViewBag.ApplicationUserID = new SelectList(db.ApplicationUsers, "Id", "Email", lecture.ApplicationUserID);
             return View(lecture);
         }
 

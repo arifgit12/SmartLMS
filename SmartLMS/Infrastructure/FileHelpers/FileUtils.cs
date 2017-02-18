@@ -11,7 +11,7 @@ namespace SmartLMS.Infrastructure.FileHelpers
 {
     public class FileUtils
     {
-        private static readonly string UPLOAD_PATH = "~/Content/Uploads/Lecturers/";
+        public static readonly string UPLOAD_PATH = "~/Content/Uploads/Lecturers/";
         public static string UploadFile(HttpPostedFileBase file)
         {
             string filename = null;
