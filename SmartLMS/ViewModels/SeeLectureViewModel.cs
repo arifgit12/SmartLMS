@@ -11,6 +11,9 @@ namespace SmartLMS.ViewModels
         [Display(Name = "Course")]
         public int CourseId { get; set; }
 
+        [Display(Name = "Course Code")]
+        public string CourseCode { get; set; }
+
         [Required]
         [Display(Name = "Course Name")]
         public string CourseName { get; set; }

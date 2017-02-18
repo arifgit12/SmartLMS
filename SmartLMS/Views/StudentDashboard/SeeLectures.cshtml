@@ -4,7 +4,7 @@
     var firstFile = "";
     if (Model.Lectures.Count > 0)
     {
-        firstFile = Model.LecturerUserName + "/" + Model.CourseName + "/" + Model.Lectures.FirstOrDefault().FileName;
+        firstFile = Model.LecturerUserName + "/" + Model.CourseCode + "/" + Model.Lectures.FirstOrDefault().FileName;
     }
 
 }
@@ -22,12 +22,12 @@
         </div>
         <div class="col-md-4">
             <h3>@Model.CourseName</h3>
-            <h4>@Model.LecturerUserName</h4>
+            <h4>by @Model.LecturerUserName</h4>
             <hr />
             <div id="solTitle" class="list-group">
             @foreach (var item in Model.Lectures)
             {
-                var urlpath = Model.LecturerUserName + "/" + Model.CourseName + "/" + item.FileName;
+                var urlpath = Model.LecturerUserName + "/" + Model.CourseCode + "/" + item.FileName;
                 <a href="#" class="list-group-item" onclick="watchLectureUrl('@item.LectureName', '@urlpath');">
                     @item.LectureName
                 </a>
@@ -40,16 +40,11 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
 
-        //$(document).ready(function(e) {
-        //    e.preventDefault();
-        //    $("#solTitle a").click(function() {
-        //        console.log("Hello -->");
-        //    });
-        //});
-
+        $(document).ready(function(e) {
+            e.preventDefault();
+        });
 
         function watchLectureUrl(file, path) {
-
             console.log(path);
             $("#watch_lecture").load('@(Url.Action("WatchLecture", "StudentDashboard", null, Request.Url.Scheme))?path=' + path);
         }
