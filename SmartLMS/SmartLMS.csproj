@@ -335,6 +335,7 @@
     <Compile Include="ViewModels\CourseViewModel.cs" />
     <Compile Include="ViewModels\ExamTakingModel.cs" />
     <Compile Include="ViewModels\QuizTakingVM.cs" />
+    <Compile Include="ViewModels\SeeLectureViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -551,6 +552,7 @@
     <Content Include="Views\StudentDashboard\_QuestionPartial.cshtml" />
     <Content Include="Views\StudentDashboard\_ChoicePartial.cshtml" />
     <Content Include="Views\StudentDashboard\QuizHistory.cshtml" />
+    <Content Include="Views\StudentDashboard\_VideoPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

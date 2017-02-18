@@ -14,6 +14,10 @@ namespace SmartLMS.Infrastructure.Mapping
 
                 config.CreateMap<Course, CourseViewModel>();
                 config.CreateMap<CourseViewModel, Course>();
+
+                config.CreateMap<Course, SeeLectureViewModel>()
+                    .ForMember(c => c.LecturerUserName,
+                        opt => opt.MapFrom(x => x.User.UserName));
             });
         }
     }

@@ -1,10 +1,12 @@
-﻿
+﻿@model SmartLMS.ViewModels.SeeLectureViewModel
 @{
     ViewBag.Title = "Watch Lectures";
-    var files = ViewData["filename"] as Dictionary<string, string>;
-    var file01 = files.FirstOrDefault();
-    var path = ViewBag.LocationPath;
-    var filesrc = path + file01.Value;
+    var firstFile = "";
+    if (Model.Lectures.Count > 0)
+    {
+        firstFile = Model.LecturerUserName + "/" + Model.CourseName + "/" + Model.Lectures.FirstOrDefault().FileName;
+    }
+
 }
 <div class="row top-bottom-padding">
 
@@ -13,23 +15,24 @@
     <div class="col-md-12">
         <div class="col-md-8">
             <div id="watch_lecture">
-                <video id="videoclip" width="560" height="400" controls>
-                    <source id="mp4video" src=@Url.Content(@HttpUtility.UrlPathEncode(filesrc)) type="video/mp4">
-                </video>
+                @{
+                    Html.RenderPartial("_VideoPartial", firstFile);
+                }
             </div>
         </div>
         <div class="col-md-4">
-            <h3>@ViewBag.CourseName</h3>
+            <h3>@Model.CourseName</h3>
+            <h4>@Model.LecturerUserName</h4>
             <hr />
-            <div class="video_wrapper">
-                <ul class="list-unstyled">
-                    @foreach (var item in ViewData["filename"] as Dictionary<string, string>)
-                    {
-                        <li><a class="videolink" href="#" onclick="playVideo('@item.Value')">@item.Value</a></li>
-                    }
-                </ul>
+            <div id="solTitle" class="list-group">
+            @foreach (var item in Model.Lectures)
+            {
+                var urlpath = Model.LecturerUserName + "/" + Model.CourseName + "/" + item.FileName;
+                <a href="#" class="list-group-item" onclick="watchLectureUrl('@item.LectureName', '@urlpath');">
+                    @item.LectureName
+                </a>
+            }
             </div>
-            
         </div>
     </div>    
 </div>
@@ -37,21 +40,18 @@
     @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
 
-        function playVideo(value) {
-            var videoID = 'videoclip';
-            var sourceID = 'mp4video';
+        //$(document).ready(function(e) {
+        //    e.preventDefault();
+        //    $("#solTitle a").click(function() {
+        //        console.log("Hello -->");
+        //    });
+        //});
 
-            console.log(value);
 
-            var filepath = '@path' + value;
-            console.log(filepath);
-            
-            //$('.videolink').click(function (event) {
-            //    $('#' + videoID).get(0).pause();
-            //    $('#' + sourceID).attr('src', filepath);
-            //    $('#' + videoID).get(0).load();
-            //    $('#' + videoID).get(0).play();
-            //});
+        function watchLectureUrl(file, path) {
+
+            console.log(path);
+            $("#watch_lecture").load('@(Url.Action("WatchLecture", "StudentDashboard", null, Request.Url.Scheme))?path=' + path);
         }
     </script>
 }

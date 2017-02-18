@@ -1,0 +1,8 @@
+﻿@model string
+@{ 
+    var basepath = "~/Content/Uploads/Lecturers/";
+}
+
+<video id="videoclip" width="560" height="400" controls autoplay="autoplay">
+    <source id="mp4video" src=@Url.Content(@HttpUtility.UrlPathEncode(basepath + Model)) type="video/mp4">
+</video>
