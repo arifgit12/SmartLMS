@@ -1,0 +1,43 @@
+﻿@model IEnumerable<SmartLMS.Models.ApplicationUser>
+@{
+    ViewBag.Title = "List of Users";
+}
+
+<div class="row">
+    <div class="top-bottom-padding">
+        <h2>
+            @ViewBag.Title
+        </h2>
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <table class="table table-bordered table-hover table-responsive">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.ActionLink("Roles", "Users", new { Area = "Admin" }, new { id = item.Id, @class = "btn btn-sm btn-success" })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+

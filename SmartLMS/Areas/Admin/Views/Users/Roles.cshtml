@@ -1,0 +1,29 @@
+﻿@model SmartLMS.Areas.Admin.Models.EditUserModel
+@{
+    ViewBag.Title = "Listof Roles";
+}
+
+<div class="row">
+    <div class="top-bottom-padding">
+        <h2>
+            @ViewBag.Title            
+        </h2>
+        <hr />
+    </div>
+</div>
+<div class="row">
+    @foreach (string role in Model.Roles)
+    {
+        <span class="label label-info">
+            @role&nbsp;&nbsp;
+            <a class="remove-from-role" data-id="@Model.User.Id" data-role="@role">
+                <i class="fa fa-close"></i>
+            </a>
+        </span><span>&nbsp;</span>
+    }
+    @if (Model.Roles.Count == 0)
+    {
+        <p><span class="label label-warning">The user has not been added to any roles yet.</span></p>
+
+    }
+</div>

@@ -71,9 +71,11 @@ namespace SmartLMS.App_Start
         {
             kernel.Bind<IUserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>();
             kernel.Bind<UserManager<ApplicationUser>>().ToSelf();
+            kernel.Bind<IRoleStore<IdentityRole, string>>().To<RoleStore<IdentityRole>>();
 
             kernel.Bind<ApplicationUserManager>().ToMethod(GetOwinInjection<ApplicationUserManager>);
             kernel.Bind<ApplicationSignInManager>().ToMethod(GetOwinInjection<ApplicationSignInManager>);
+            kernel.Bind<ApplicationRoleManager>().ToMethod(GetOwinInjection<ApplicationRoleManager>);
 
             kernel.Bind<ISmartLMSData>().To<SmartLMSData>();
         }
