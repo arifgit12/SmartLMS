@@ -7,13 +7,13 @@ namespace SmartLMS.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class intial_create : IMigrationMetadata
+    public sealed partial class inital_create_db : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(intial_create));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(inital_create_db));
         
         string IMigrationMetadata.Id
         {
-            get { return "201702091211588_intial_create"; }
+            get { return "201702180812115_inital_create_db"; }
         }
         
         string IMigrationMetadata.Source

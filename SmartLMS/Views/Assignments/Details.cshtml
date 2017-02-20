@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "Assignments Details";
+    var fileSrc = ViewBag.FilePath;
+    // src=@Url.Content(@HttpUtility.UrlPathEncode(filesrc)) 
 }
 
 <div class="row">
@@ -38,7 +40,12 @@
                 <dd>
                     @Html.DisplayFor(model => model.LastDate)
                 </dd>
-
+                <dt>
+                    Download
+                </dt>
+                <dd>
+                    @Html.ActionLink("Download", "Download", new { FileName = fileSrc })
+                </dd>
             </dl>
         </div>
         <div class="col-md-6">

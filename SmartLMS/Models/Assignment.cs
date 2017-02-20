@@ -14,9 +14,13 @@ namespace SmartLMS.Models
         public string AssignmentName { get; set; }
         [Required]
         public DateTime LastDate { get; set; }
-        public virtual Course Course { get; set; }
+
+        [StringLength(255)]
+        public string FileName { get; set; }
+
         [Required]
         public int CourseId { get; set; }
+        public virtual Course Course { get; set; }
         public ICollection<StudentAssignment> Students { get; set; }
     }
 }

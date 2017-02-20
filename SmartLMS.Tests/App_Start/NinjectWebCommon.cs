@@ -1,7 +1,7 @@
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(SmartLMS.App_Start.NinjectWebCommon), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(SmartLMS.App_Start.NinjectWebCommon), "Stop")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(SmartLMS.Tests.App_Start.NinjectWebCommon), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethodAttribute(typeof(SmartLMS.Tests.App_Start.NinjectWebCommon), "Stop")]
 
-namespace SmartLMS.App_Start
+namespace SmartLMS.Tests.App_Start
 {
     using System;
     using System.Web;
@@ -10,14 +10,6 @@ namespace SmartLMS.App_Start
 
     using Ninject;
     using Ninject.Web.Common;
-
-    using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.Owin;
-    using Ninject.Activation;
-    using Microsoft.AspNet.Identity.EntityFramework;
-    using Models;
-    using static ApplicationUserManager;
-    using Data.Repository;
 
     public static class NinjectWebCommon 
     {
@@ -69,19 +61,6 @@ namespace SmartLMS.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IUserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>();
-            kernel.Bind<UserManager<ApplicationUser>>().ToSelf();
-
-            kernel.Bind<ApplicationUserManager>().ToMethod(GetOwinInjection<ApplicationUserManager>);
-            kernel.Bind<ApplicationSignInManager>().ToMethod(GetOwinInjection<ApplicationSignInManager>);
-
-            kernel.Bind<ISmartLMSData>().To<SmartLMSData>();
-        }
-
-        private static T GetOwinInjection<T>(IContext context) where T : class
-        {
-            var contextBase = new HttpContextWrapper(HttpContext.Current);
-            return contextBase.GetOwinContext().Get<T>();
-        }
+        }        
     }
 }

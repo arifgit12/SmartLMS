@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmartLMS.Infrastructure.Mapping;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -18,6 +19,8 @@ namespace SmartLMS
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            AutoMapperConfiguration.RegisterMaps();
         }
     }
 }

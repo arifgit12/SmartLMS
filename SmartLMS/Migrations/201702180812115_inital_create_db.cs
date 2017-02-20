@@ -3,7 +3,7 @@ namespace SmartLMS.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class intial_create : DbMigration
+    public partial class inital_create_db : DbMigration
     {
         public override void Up()
         {
@@ -36,8 +36,8 @@ namespace SmartLMS.Migrations
                 c => new
                     {
                         QuestionId = c.Int(nullable: false, identity: true),
-                        QuizId = c.Int(nullable: false),
                         QuestionText = c.String(nullable: false),
+                        QuizId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.QuestionId)
                 .ForeignKey("dbo.Quizs", t => t.QuizId, cascadeDelete: true)
@@ -64,8 +64,11 @@ namespace SmartLMS.Migrations
                 c => new
                     {
                         CourseId = c.Int(nullable: false, identity: true),
+                        CourseCode = c.String(nullable: false, maxLength: 20),
                         CourseName = c.String(nullable: false),
+                        Description = c.String(nullable: false),
                         CategoryId = c.Int(nullable: false),
+                        StartDate = c.DateTime(),
                         Rating = c.Int(nullable: false),
                         User_Id = c.String(maxLength: 128),
                     })
@@ -76,29 +79,31 @@ namespace SmartLMS.Migrations
                 .Index(t => t.User_Id);
             
             CreateTable(
-                "dbo.Categories",
+                "dbo.Assignments",
                 c => new
                     {
-                        CategoryId = c.Int(nullable: false, identity: true),
-                        CategoryName = c.String(nullable: false),
-                        ParentCategory_CategoryId = c.Int(),
+                        AssignmentId = c.Int(nullable: false, identity: true),
+                        AssignmentName = c.String(nullable: false),
+                        LastDate = c.DateTime(nullable: false),
+                        FileName = c.String(maxLength: 255),
+                        CourseId = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => t.CategoryId)
-                .ForeignKey("dbo.Categories", t => t.ParentCategory_CategoryId)
-                .Index(t => t.ParentCategory_CategoryId);
+                .PrimaryKey(t => t.AssignmentId)
+                .ForeignKey("dbo.Courses", t => t.CourseId, cascadeDelete: true)
+                .Index(t => t.CourseId);
             
             CreateTable(
-                "dbo.StudentCourses",
+                "dbo.StudentAssignments",
                 c => new
                     {
                         StudentId = c.String(nullable: false, maxLength: 128),
-                        CourseId = c.Int(nullable: false),
+                        AssignmentId = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => new { t.StudentId, t.CourseId })
-                .ForeignKey("dbo.Courses", t => t.CourseId, cascadeDelete: true)
+                .PrimaryKey(t => new { t.StudentId, t.AssignmentId })
+                .ForeignKey("dbo.Assignments", t => t.AssignmentId, cascadeDelete: true)
                 .ForeignKey("dbo.AspNetUsers", t => t.StudentId, cascadeDelete: true)
                 .Index(t => t.StudentId)
-                .Index(t => t.CourseId);
+                .Index(t => t.AssignmentId);
             
             CreateTable(
                 "dbo.AspNetUsers",
@@ -122,32 +127,6 @@ namespace SmartLMS.Migrations
                 .Index(t => t.UserName, unique: true, name: "UserNameIndex");
             
             CreateTable(
-                "dbo.StudentAssignments",
-                c => new
-                    {
-                        StudentId = c.String(nullable: false, maxLength: 128),
-                        AssignmentId = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => new { t.StudentId, t.AssignmentId })
-                .ForeignKey("dbo.Assignments", t => t.AssignmentId, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetUsers", t => t.StudentId, cascadeDelete: true)
-                .Index(t => t.StudentId)
-                .Index(t => t.AssignmentId);
-            
-            CreateTable(
-                "dbo.Assignments",
-                c => new
-                    {
-                        AssignmentId = c.Int(nullable: false, identity: true),
-                        AssignmentName = c.String(nullable: false),
-                        LastDate = c.DateTime(nullable: false),
-                        CourseId = c.Int(nullable: false),
-                    })
-                .PrimaryKey(t => t.AssignmentId)
-                .ForeignKey("dbo.Courses", t => t.CourseId, cascadeDelete: true)
-                .Index(t => t.CourseId);
-            
-            CreateTable(
                 "dbo.AspNetUserClaims",
                 c => new
                     {
@@ -159,6 +138,20 @@ namespace SmartLMS.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId);
+            
+            CreateTable(
+                "dbo.StudentCourses",
+                c => new
+                    {
+                        StudentId = c.String(nullable: false, maxLength: 128),
+                        CourseId = c.Int(nullable: false),
+                        Status = c.Int(nullable: false),
+                    })
+                .PrimaryKey(t => new { t.StudentId, t.CourseId })
+                .ForeignKey("dbo.Courses", t => t.CourseId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.StudentId, cascadeDelete: true)
+                .Index(t => t.StudentId)
+                .Index(t => t.CourseId);
             
             CreateTable(
                 "dbo.AspNetUserLogins",
@@ -200,6 +193,34 @@ namespace SmartLMS.Migrations
                 .Index(t => t.RoleId);
             
             CreateTable(
+                "dbo.Categories",
+                c => new
+                    {
+                        CategoryId = c.Int(nullable: false, identity: true),
+                        CategoryName = c.String(nullable: false),
+                        ParentCategory_CategoryId = c.Int(),
+                    })
+                .PrimaryKey(t => t.CategoryId)
+                .ForeignKey("dbo.Categories", t => t.ParentCategory_CategoryId)
+                .Index(t => t.ParentCategory_CategoryId);
+            
+            CreateTable(
+                "dbo.Lectures",
+                c => new
+                    {
+                        LectureId = c.Int(nullable: false, identity: true),
+                        LectureName = c.String(nullable: false),
+                        CourseId = c.Int(nullable: false),
+                        FileName = c.String(maxLength: 255),
+                        ApplicationUserID = c.String(maxLength: 128),
+                    })
+                .PrimaryKey(t => t.LectureId)
+                .ForeignKey("dbo.Courses", t => t.CourseId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserID)
+                .Index(t => t.CourseId)
+                .Index(t => t.ApplicationUserID);
+            
+            CreateTable(
                 "dbo.Certificates",
                 c => new
                     {
@@ -222,21 +243,6 @@ namespace SmartLMS.Migrations
                         ContactMessage = c.String(nullable: false),
                     })
                 .PrimaryKey(t => t.ContactEmail);
-            
-            CreateTable(
-                "dbo.Lectures",
-                c => new
-                    {
-                        LectureId = c.Int(nullable: false, identity: true),
-                        LectureName = c.String(nullable: false),
-                        CourseId = c.Int(nullable: false),
-                        ApplicationUserID = c.String(maxLength: 128),
-                    })
-                .PrimaryKey(t => t.LectureId)
-                .ForeignKey("dbo.Courses", t => t.CourseId, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserID)
-                .Index(t => t.CourseId)
-                .Index(t => t.ApplicationUserID);
             
             CreateTable(
                 "dbo.Ratings",
@@ -278,46 +284,46 @@ namespace SmartLMS.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.Ratings", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Ratings", "CourseId", "dbo.Courses");
-            DropForeignKey("dbo.Lectures", "ApplicationUserID", "dbo.AspNetUsers");
-            DropForeignKey("dbo.Lectures", "CourseId", "dbo.Courses");
             DropForeignKey("dbo.Certificates", "ApplicationUserID", "dbo.AspNetUsers");
             DropForeignKey("dbo.Certificates", "CourseId", "dbo.Courses");
             DropForeignKey("dbo.Questions", "QuizId", "dbo.Quizs");
             DropForeignKey("dbo.Quizs", "CourseId", "dbo.Courses");
             DropForeignKey("dbo.Courses", "User_Id", "dbo.AspNetUsers");
-            DropForeignKey("dbo.StudentCourses", "StudentId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Lectures", "ApplicationUserID", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Lectures", "CourseId", "dbo.Courses");
+            DropForeignKey("dbo.Courses", "CategoryId", "dbo.Categories");
+            DropForeignKey("dbo.Categories", "ParentCategory_CategoryId", "dbo.Categories");
+            DropForeignKey("dbo.StudentAssignments", "StudentId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.StudentQuizs", "StudentId", "dbo.AspNetUsers");
             DropForeignKey("dbo.StudentQuizs", "QuizId", "dbo.Quizs");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.StudentCourses", "StudentId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.StudentCourses", "CourseId", "dbo.Courses");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.StudentAssignments", "StudentId", "dbo.AspNetUsers");
             DropForeignKey("dbo.StudentAssignments", "AssignmentId", "dbo.Assignments");
             DropForeignKey("dbo.Assignments", "CourseId", "dbo.Courses");
-            DropForeignKey("dbo.StudentCourses", "CourseId", "dbo.Courses");
-            DropForeignKey("dbo.Courses", "CategoryId", "dbo.Categories");
-            DropForeignKey("dbo.Categories", "ParentCategory_CategoryId", "dbo.Categories");
             DropForeignKey("dbo.AnswerChoices", "QuestionId", "dbo.Questions");
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.Ratings", new[] { "UserId" });
             DropIndex("dbo.Ratings", new[] { "CourseId" });
-            DropIndex("dbo.Lectures", new[] { "ApplicationUserID" });
-            DropIndex("dbo.Lectures", new[] { "CourseId" });
             DropIndex("dbo.Certificates", new[] { "CourseId" });
             DropIndex("dbo.Certificates", new[] { "ApplicationUserID" });
+            DropIndex("dbo.Lectures", new[] { "ApplicationUserID" });
+            DropIndex("dbo.Lectures", new[] { "CourseId" });
+            DropIndex("dbo.Categories", new[] { "ParentCategory_CategoryId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.StudentQuizs", new[] { "QuizId" });
             DropIndex("dbo.StudentQuizs", new[] { "StudentId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
-            DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
-            DropIndex("dbo.Assignments", new[] { "CourseId" });
-            DropIndex("dbo.StudentAssignments", new[] { "AssignmentId" });
-            DropIndex("dbo.StudentAssignments", new[] { "StudentId" });
-            DropIndex("dbo.AspNetUsers", "UserNameIndex");
             DropIndex("dbo.StudentCourses", new[] { "CourseId" });
             DropIndex("dbo.StudentCourses", new[] { "StudentId" });
-            DropIndex("dbo.Categories", new[] { "ParentCategory_CategoryId" });
+            DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
+            DropIndex("dbo.AspNetUsers", "UserNameIndex");
+            DropIndex("dbo.StudentAssignments", new[] { "AssignmentId" });
+            DropIndex("dbo.StudentAssignments", new[] { "StudentId" });
+            DropIndex("dbo.Assignments", new[] { "CourseId" });
             DropIndex("dbo.Courses", new[] { "User_Id" });
             DropIndex("dbo.Courses", new[] { "CategoryId" });
             DropIndex("dbo.Quizs", new[] { "CourseId" });
@@ -326,18 +332,18 @@ namespace SmartLMS.Migrations
             DropTable("dbo.Subscribes");
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.Ratings");
-            DropTable("dbo.Lectures");
             DropTable("dbo.Contacts");
             DropTable("dbo.Certificates");
+            DropTable("dbo.Lectures");
+            DropTable("dbo.Categories");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.StudentQuizs");
             DropTable("dbo.AspNetUserLogins");
-            DropTable("dbo.AspNetUserClaims");
-            DropTable("dbo.Assignments");
-            DropTable("dbo.StudentAssignments");
-            DropTable("dbo.AspNetUsers");
             DropTable("dbo.StudentCourses");
-            DropTable("dbo.Categories");
+            DropTable("dbo.AspNetUserClaims");
+            DropTable("dbo.AspNetUsers");
+            DropTable("dbo.StudentAssignments");
+            DropTable("dbo.Assignments");
             DropTable("dbo.Courses");
             DropTable("dbo.Quizs");
             DropTable("dbo.Questions");

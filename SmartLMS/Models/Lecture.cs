@@ -10,12 +10,15 @@ namespace SmartLMS.Models
     {
         [Key]
         public int LectureId { get; set; }
+
         [Required]
         public string LectureName { get; set; }
 
         public int CourseId { get; set; }
-        public Course Course { get; set; }        
+        public Course Course { get; set; }
 
+        [StringLength(255)]
+        public string FileName { get; set; }
         public string ApplicationUserID { get; set; }
         public ApplicationUser User { get; set; }
     }

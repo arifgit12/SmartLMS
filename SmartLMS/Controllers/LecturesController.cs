@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using SmartLMS.Models;
 using Microsoft.AspNet.Identity;
 using System.IO;
+using SmartLMS.Infrastructure.FileHelpers;
 
 namespace SmartLMS.Controllers
 {
@@ -47,7 +48,7 @@ namespace SmartLMS.Controllers
             lecture.User = db.Users.Where(u => u.Id == getuser).Single();
             db.Lectures.Add(lecture);
 
-            string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseName;
+            string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseCode;
             string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, lecture.LectureName + ".mp4");
             ViewData["lecture"] = uploadpath;
             return View(lecture);
@@ -76,18 +77,22 @@ namespace SmartLMS.Controllers
             {
                 lecture.User = db.Users.Where(u => u.Id == getuser).Single();
 
-                db.Lectures.Add(lecture);
-                await db.SaveChangesAsync();
                 if (upload.ContentLength > 0)
                 {
-                    string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseName;
-                    string uploadDirectoryPath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename);
-                    if (!Directory.Exists(uploadDirectoryPath))
-                    {
-                        Directory.CreateDirectory(uploadDirectoryPath);
-                    }
-                    string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, lecture.LectureName + ".mp4");
-                    upload.SaveAs(uploadpath);
+                    string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseCode;
+                    string uploadedFileName = FileUtils.UploadFile(upload, User.Identity.GetUserName(), coursename);
+
+                    lecture.FileName = uploadedFileName;
+
+                    db.Lectures.Add(lecture);
+                    await db.SaveChangesAsync();
+                    //string uploadDirectoryPath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename);
+                    //if (!Directory.Exists(uploadDirectoryPath))
+                    //{
+                    //    Directory.CreateDirectory(uploadDirectoryPath);
+                    //}
+                    //string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, lecture.LectureName + ".mp4");
+                    //upload.SaveAs(uploadpath);
                 }
 
                 return RedirectToAction("Index");
@@ -124,19 +129,21 @@ namespace SmartLMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(lecture).State = EntityState.Modified;
-                await db.SaveChangesAsync();
                 if (upload.ContentLength > 0)
                 {
-                    string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseName;
-                    string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, lecture.LectureName + ".mp4");
-                    upload.SaveAs(uploadpath);
+                    string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseCode;
+                    //string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, lecture.LectureName + ".mp4");
+                    //upload.SaveAs(uploadpath);
+                    string uploadedFileName = FileUtils.UploadFile(upload, User.Identity.GetUserName(), coursename);
+
+                    lecture.FileName = uploadedFileName;
                 }
 
+                db.Entry(lecture).State = EntityState.Modified;
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             ViewBag.CourseId = new SelectList(db.Courses, "CourseId", "CourseName", lecture.CourseId);
-            //ViewBag.ApplicationUserID = new SelectList(db.ApplicationUsers, "Id", "Email", lecture.ApplicationUserID);
             return View(lecture);
         }
 
@@ -162,7 +169,7 @@ namespace SmartLMS.Controllers
         {
             Lecture lecture = await db.Lectures.FindAsync(id);
             db.Lectures.Remove(lecture);
-            string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseName;
+            string coursename = db.Courses.Where(c => c.CourseId == lecture.CourseId).Single().CourseCode;
             string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, lecture.LectureName + ".mp4");
             System.IO.File.Delete(uploadpath);
 

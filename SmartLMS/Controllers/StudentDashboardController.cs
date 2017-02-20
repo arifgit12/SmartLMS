@@ -11,6 +11,7 @@ using System.IO;
 using SmartLMS.Infrastructure.Video;
 using System.Net;
 using SmartLMS.ViewModels;
+using System.Web.Hosting;
 
 namespace SmartLMS.Controllers
 {
@@ -67,6 +68,7 @@ namespace SmartLMS.Controllers
             StudentCourse.Course = course;
             StudentCourse.CourseId = course.CourseId;
             StudentCourse.StudentId = getuser;
+            StudentCourse.Status = EnrollStatus.Accepted;
             db.StudentCourses.Add(StudentCourse);
             db.SaveChanges();
             return RedirectToAction("Courses");
@@ -99,7 +101,7 @@ namespace SmartLMS.Controllers
             return View(List);
         }
 
-        public ActionResult SeeLectures(int?  courseId)
+        public ActionResult SeeLectures(int? courseId)
         {
             if (courseId == null)
             {
@@ -107,26 +109,16 @@ namespace SmartLMS.Controllers
             }
 
             var user = User.Identity.GetUserName();
-            var model = db.Courses.Find(courseId);
+            var course = db.Courses.Find(courseId);
 
-            if (model == null)
+            if (course == null)
             {
                 return HttpNotFound();
             }
-            var lecturerusername = db.Users.Where(u => u.Id == model.User.Id).Single();
-            var course = db.Courses.Find(model.CourseId);
-            Dictionary<string, string> files = new Dictionary<string, string>();
-            string[] file = Directory.GetFiles(Server.MapPath("~/Content/Uploads/Lecturers/" + lecturerusername.UserName + "/" + course.CourseName), "*.*", SearchOption.AllDirectories);
 
-            ViewBag.CourseName = model.CourseName;
-            ViewBag.LocationPath = "~/Content/Uploads/Lecturers/" + lecturerusername.UserName + "/" + course.CourseName + "/";
-            foreach (string i in file)
-            {
-                files.Add(i, Path.GetFileName(i));
+            var model = AutoMapper.Mapper.Map<SeeLectureViewModel>(course);
 
-            }
-            ViewData["filename"] = files;
-            return View();
+            return View(model);
 
         }
 
@@ -161,7 +153,7 @@ namespace SmartLMS.Controllers
         public ActionResult WatchLecture(string path)
         {
             ViewData["path"] = path;
-            return View();
+            return PartialView("_VideoPartial", path);
         }
 
         public ActionResult DownloadLecture(string path)

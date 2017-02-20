@@ -1,13 +1,12 @@
 ﻿using System.Data;
 using System.Data.Entity;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SmartLMS.Models;
 using System.Net;
 using Microsoft.AspNet.Identity;
+using SmartLMS.Infrastructure.FileHelpers;
 using System.IO;
 
 namespace SmartLMS.Controllers
@@ -37,6 +36,9 @@ namespace SmartLMS.Controllers
             {
                 return HttpNotFound();
             }
+            string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseCode;
+            ViewBag.FilePath = Server.MapPath(FileUtils.UPLOAD_PATH + User.Identity.GetUserName() + "/" + coursename + "/" + assignment.FileName);
+
             return View(assignment);
         }
 
@@ -54,7 +56,7 @@ namespace SmartLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "AssignmentId,AssignmentName,LastDate,CourseId")] Assignment assignment, HttpPostedFileBase upload)
+        public ActionResult Create(Assignment assignment, HttpPostedFileBase upload)
         {
             if (upload != null && upload.ContentLength > 0)
             {
@@ -62,13 +64,15 @@ namespace SmartLMS.Controllers
 
                 if(course.Lectures.Count() > 0)
                 {
+                    string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseCode;
+                    //string ext = Path.GetExtension(upload.FileName);
+                    //string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, assignment.AssignmentName + ext);
+                    //upload.SaveAs(uploadpath);
+                    string uploadedFileName = FileUtils.UploadFile(upload, User.Identity.GetUserName(), coursename);
+
+                    assignment.FileName = uploadedFileName;
+
                     db.Assignment.Add(assignment);
-
-                    string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseName;
-                    string ext = Path.GetExtension(upload.FileName);
-                    string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, assignment.AssignmentName + ext);
-                    upload.SaveAs(uploadpath);
-
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -93,14 +97,7 @@ namespace SmartLMS.Controllers
                 return HttpNotFound();
             }
             string userid = User.Identity.GetUserId();
-            string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseName;
-
-            string filePath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename);
-
-            var file = Directory.GetFiles(filePath)
-                .Select( f => Path.GetFileNameWithoutExtension(assignment.AssignmentName));
-            ViewBag.FilePath = filePath;
-            ViewBag.FileName = file.FirstOrDefault();
+            string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseCode;
 
             ViewBag.CourseId = new SelectList(db.Courses.Where(x => x.User.Id == userid), "CourseId", "CourseName");
             return View(assignment);
@@ -111,31 +108,22 @@ namespace SmartLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "AssignmentId,AssignmentName,LastDate,CourseId")] Assignment assignment, HttpPostedFileBase upload)
+        public ActionResult Edit(Assignment assignment, HttpPostedFileBase upload)
         {
-            string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseName;
+            string coursename = db.Courses.Where(c => c.CourseId == assignment.CourseId).Single().CourseCode;
 
             if (ModelState.IsValid)
             {
                 if ( upload != null && upload.ContentLength > 0)
                 {
-                    db.Entry(assignment).State = EntityState.Modified;                    
-                    string ext = Path.GetExtension(upload.FileName);
-                    string uploadpath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename, assignment.AssignmentName + ext);
-                    upload.SaveAs(uploadpath);
+                    string uploadedFileName = FileUtils.UploadFile(upload, User.Identity.GetUserName(), coursename);
 
-                    db.SaveChanges();
-                    return RedirectToAction("Index");
+                    assignment.FileName = uploadedFileName;
                 }
-                
+                db.Entry(assignment).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
             }
-
-            string filePath = Path.Combine(Server.MapPath("~/Content/Uploads/Lecturers/"), User.Identity.GetUserName(), coursename);
-
-            var file = Directory.GetFiles(filePath)
-               .Select(f => Path.GetFileNameWithoutExtension(assignment.AssignmentName));
-            ViewBag.FilePath = filePath;
-            ViewBag.FileName = file.FirstOrDefault();
 
             ViewBag.CourseId = new SelectList(db.Courses, "CourseId", "CourseName", assignment.CourseId);
             return View(assignment);
@@ -167,6 +155,22 @@ namespace SmartLMS.Controllers
             return RedirectToAction("Index");
         }
 
+        public FileResult Download(string FileName)
+        {
+            string contentType = string.Empty;
+
+            if (FileName.Contains(".pdf"))
+            {
+                contentType = "application/pdf";
+            }
+
+            else if (FileName.Contains(".docx"))
+            {
+                contentType = "application/docx";
+            }
+
+            return File(FileName,contentType);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

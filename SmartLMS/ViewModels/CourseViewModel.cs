@@ -1,23 +1,16 @@
-﻿using System;
+﻿using SmartLMS.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace SmartLMS.Models
+namespace SmartLMS.ViewModels
 {
-    public class Course
+    public class CourseViewModel
     {
-        [Key]
         [Display(Name = "Course")]
         public int CourseId { get; set; }
-
-        [Required]
-        [MaxLength(20)]
-        //[RegularExpression(@"^\S\,*$", ErrorMessage = "No white space allowed")]
-        [Display(Name = "Course Code")]
-        public string CourseCode { get; set; }
 
         [Required]
         [Display(Name = "Course Name")]
@@ -28,10 +21,9 @@ namespace SmartLMS.Models
         public string Description { get; set; }
 
         [Required]
-        [ForeignKey("Category")]
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
-        public virtual Category Category { get; set; }
+        public Category Category { get; set; }
 
         [Display(Name = "Start Date")]
         public DateTime? StartDate { get; set; }

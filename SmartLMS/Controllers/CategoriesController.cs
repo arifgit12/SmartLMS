@@ -1,47 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using SmartLMS.Models;
+using SmartLMS.Data.Repository;
+using SmartLMS.ViewModels;
 
 namespace SmartLMS.Controllers
 {
     [Authorize(Roles = "Administrator")]
     public class CategoriesController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        protected ISmartLMSData Data { get; private set; }
+
+        public CategoriesController(ISmartLMSData data)
+        {
+            this.Data = data;
+        }
 
         // GET: Categories
         [AllowAnonymous]
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            return View(await db.Categories.ToListAsync());
+            var model = AutoMapper.Mapper.Map<IEnumerable<CategoryViewModel>>(this.Data.Categories.All());
+            return View(model);
         }
 
         // GET: Categories/Details/5
-        public async Task<ActionResult> Details(int? id)
+        public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await db.Categories.FindAsync(id);
+            Category category = this.Data.Categories.Find(id);
+            
             if (category == null)
             {
                 return HttpNotFound();
             }
-            return View(category);
+
+            var model = AutoMapper.Mapper.Map<CategoryViewModel>(category);
+            return View(model);
         }
 
         // GET: Categories/Create
         public ActionResult Create()
         {
-            ViewData["Categories"] = new SelectList(db.Categories.ToList(), "CategoryId", "CategoryName", "");
+            ViewData["Categories"] = new SelectList(this.Data.Categories.All().ToList(), "CategoryId", "CategoryName", "");
             return View();
         }
 
@@ -50,82 +57,79 @@ namespace SmartLMS.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "CategoryId,CategoryName")] Category category)
+        public ActionResult Create(CategoryViewModel model)
         {
             if (ModelState.IsValid)
             {
-                db.Categories.Add(category);
-                await db.SaveChangesAsync();
+                var category = AutoMapper.Mapper.Map<Category>(model);
+                this.Data.Categories.Add(category);
+                this.Data.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(category);
+            return View(model);
         }
 
         // GET: Categories/Edit/5
-        public async Task<ActionResult> Edit(int? id)
+        public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await db.Categories.FindAsync(id);
+
+            Category category = this.Data.Categories.Find(id);
+
             if (category == null)
             {
                 return HttpNotFound();
             }
-            return View(category);
+
+            var model = AutoMapper.Mapper.Map<CategoryViewModel>(category);
+            return View(model);
         }
 
         // POST: Categories/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "CategoryId,CategoryName")] Category category)
+        public ActionResult Edit(CategoryViewModel model)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(category).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                var category = AutoMapper.Mapper.Map<Category>(model);
+                this.Data.Categories.Update(category);
+                this.Data.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(category);
+
+            return View(model);
         }
 
         // GET: Categories/Delete/5
-        public async Task<ActionResult> Delete(int? id)
+        public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = await db.Categories.FindAsync(id);
+            Category category = this.Data.Categories.Find(id);
             if (category == null)
             {
                 return HttpNotFound();
             }
-            return View(category);
+            var model = AutoMapper.Mapper.Map<CategoryViewModel>(category);
+            return View(model);
         }
 
         // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id)
         {
-            Category category = await db.Categories.FindAsync(id);
-            db.Categories.Remove(category);
-            await db.SaveChangesAsync();
+            Category category = this.Data.Categories.Find(id);
+            this.Data.Categories.Delete(category);
+            this.Data.SaveChanges();
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

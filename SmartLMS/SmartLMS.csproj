@@ -303,10 +303,12 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\FileHelpers\FileUtils.cs" />
+    <Compile Include="Infrastructure\Mapping\AutoMapperConfiguration.cs" />
     <Compile Include="Infrastructure\Video\VideoResult.cs" />
-    <Compile Include="Migrations\201702091211588_intial_create.cs" />
-    <Compile Include="Migrations\201702091211588_intial_create.Designer.cs">
-      <DependentUpon>201702091211588_intial_create.cs</DependentUpon>
+    <Compile Include="Migrations\201702180812115_inital_create_db.cs" />
+    <Compile Include="Migrations\201702180812115_inital_create_db.Designer.cs">
+      <DependentUpon>201702180812115_inital_create_db.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
@@ -317,6 +319,8 @@
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Certificate.cs" />
     <Compile Include="Models\Contact.cs" />
+    <Compile Include="Models\Core\EntityBase.cs" />
+    <Compile Include="Models\Core\IdentityGenerator.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\Lecture.cs" />
@@ -331,8 +335,11 @@
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\CategoryViewModel.cs" />
+    <Compile Include="ViewModels\CourseViewModel.cs" />
     <Compile Include="ViewModels\ExamTakingModel.cs" />
     <Compile Include="ViewModels\QuizTakingVM.cs" />
+    <Compile Include="ViewModels\SeeLectureViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\HelpPage\HelpPage.css" />
@@ -550,10 +557,10 @@
     <Content Include="Views\StudentDashboard\_QuestionPartial.cshtml" />
     <Content Include="Views\StudentDashboard\_ChoicePartial.cshtml" />
     <Content Include="Views\StudentDashboard\QuizHistory.cshtml" />
+    <Content Include="Views\StudentDashboard\_VideoPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Infrastructure\FileHelpers\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -562,8 +569,8 @@
     <Content Include="Scripts\jquery-3.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201702091211588_intial_create.resx">
-      <DependentUpon>201702091211588_intial_create.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201702180812115_inital_create_db.resx">
+      <DependentUpon>201702180812115_inital_create_db.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

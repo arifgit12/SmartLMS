@@ -34,7 +34,7 @@ namespace SmartLMS.Data.Repository
             return DbSet.Count();
         }
 
-        public T Create(T entity)
+        public T Add(T entity)
         {
             var newentity = DbSet.Add(entity);
             Save();
@@ -81,12 +81,12 @@ namespace SmartLMS.Data.Repository
             return query.FirstOrDefault(predicate);
         }
 
-        public IEnumerable<T> Get(Expression<Func<T, bool>> predicate)
+        public IEnumerable<T> SearchFor(Expression<Func<T, bool>> predicate)
         {
             return DbSet.Where(predicate).AsEnumerable<T>();
         }
 
-        public IEnumerable<T> Get(Expression<Func<T, bool>> predicate, string includeProperties = "")
+        public IEnumerable<T> SearchFor(Expression<Func<T, bool>> predicate, string includeProperties = "")
         {
             IQueryable<T> query = DbSet;
 
