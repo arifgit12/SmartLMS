@@ -11,14 +11,6 @@ namespace SmartLMS.App_Start
     using Ninject;
     using Ninject.Web.Common;
 
-    using Microsoft.AspNet.Identity;
-    using Microsoft.AspNet.Identity.Owin;
-    using Ninject.Activation;
-    using Microsoft.AspNet.Identity.EntityFramework;
-    using Models;
-    using static ApplicationUserManager;
-    using Data.Repository;
-
     public static class NinjectWebCommon 
     {
         private static readonly Bootstrapper bootstrapper = new Bootstrapper();
@@ -69,21 +61,6 @@ namespace SmartLMS.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IUserStore<ApplicationUser>>().To<UserStore<ApplicationUser>>();
-            kernel.Bind<UserManager<ApplicationUser>>().ToSelf();
-            kernel.Bind<IRoleStore<IdentityRole, string>>().To<RoleStore<IdentityRole>>();
-
-            kernel.Bind<ApplicationUserManager>().ToMethod(GetOwinInjection<ApplicationUserManager>);
-            kernel.Bind<ApplicationSignInManager>().ToMethod(GetOwinInjection<ApplicationSignInManager>);
-            kernel.Bind<ApplicationRoleManager>().ToMethod(GetOwinInjection<ApplicationRoleManager>);
-
-            kernel.Bind<ISmartLMSData>().To<SmartLMSData>();
-        }
-
-        private static T GetOwinInjection<T>(IContext context) where T : class
-        {
-            var contextBase = new HttpContextWrapper(HttpContext.Current);
-            return contextBase.GetOwinContext().Get<T>();
-        }
+        }        
     }
 }
