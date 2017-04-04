@@ -1,0 +1,4 @@
+*.cs linguist-language=csharp
+
+SmartLMS/Content/* linguist-vendored
+SmartLMS/Scripts/* linguist-vendored
